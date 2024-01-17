@@ -1,0 +1,54 @@
+{% extends "main/base.html" %}
+{% load static %}
+
+{% block title %}Travel Manager{% endblock %}
+
+{% block content%}
+<link rel="stylesheet" href="{% static 'css/travel_manager.css' %}">   
+<link rel="stylesheet" href="{% static 'flags/sprite.css' %}"> 
+
+<div class="d-flex justify-content-between align-items-center">
+    <a href="add-destination" class="btn btn-success">Add</a>
+    <h3 class="text-center mx-auto">List of destinations</h3>
+</div>
+<hr class="mt-4 mb-4">
+{% comment %} <div class="input-group mb-3">
+    <label class="mx-auto">Country</label>
+    <label class="mx-auto">City</label>
+</div>
+{% for destiny in user.destination.all %}
+    <div class="input-group mb-3 align-items-center">
+        <img src="{{destiny.country.flag}}" class="img-fit" alt="{{destiny.country.name}}">
+        <label class="form mx-auto">{{destiny.country.name|slice:":10"}}</label>
+        <label class="form mx-auto">{{destiny.city}}</label>
+        <a href="" class="btn btn-success">Info</a>
+        <a href="" class="btn btn-success">Edit</a>
+    </div>
+{% endfor %} {% endcomment %}
+
+<div class="container text-center">
+    <div class="row mb-3">
+        <div class="col"></div>
+        <div class="col">Country</div>
+        <div class="col">City</div>
+        <div class="col"></div>
+    </div>
+    {% for destiny in user.destination.all %}
+    <div class="row mb-3">
+        <div class="col">
+            <img src="{{destiny.country.flag}}" alt="{{destiny.country.name}}">
+        </div>
+        <div class="col">
+            <label>{{destiny.country.name|slice:":20"}}</label>
+        </div>
+        <div class="col">
+            <label>{{destiny.city}}</label>
+        </div>
+        <div class="col">
+            <a href="travel-manager/{{destiny.id}}" class="btn btn-success">Info</a>
+            <a href="" class="btn btn-success">Edit</a>
+        </div>
+    </div>
+    {% endfor %}
+</div>
+{% endblock %}

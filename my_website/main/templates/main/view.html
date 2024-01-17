@@ -1,0 +1,24 @@
+{% extends "main/base.html" %}
+{% load static %}
+
+{% block title %}
+View
+{% endblock %}
+
+{% block todolist_navigation %}
+    <!-- Dodatkowe przyciski nawigacyjne specyficzne dla ToDoList -->
+    <a href="/create">Create</a>
+    <a href="/view">View</a>
+{% endblock %}
+
+{% block content %}
+<link rel="stylesheet" href="{% static 'css/todolist.css' %}">  
+
+<h3>Your Lists</h3>
+    {% for td in user.todolist.all %}
+        <div class="input-group mb-3">
+            <a href="/{{td.id}}" class="btn btn-outline-dark me-3">{{td.name}}</a>
+            <a href="delete/{{td.id}}" class="btn btn-outline-danger">Delete</a>
+        </div>
+    {% endfor %}
+{% endblock %}

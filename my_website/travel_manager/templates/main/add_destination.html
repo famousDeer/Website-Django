@@ -1,0 +1,14 @@
+{% extends "main/base.html" %}
+{% load static %}
+
+{% block title %}Add destination{% endblock %}
+
+{% block content %}
+
+<form method="post" action="/add-destination">
+    {% csrf_token %}
+    {{form.country}}
+    {{form.city}}
+    <button class="save" type="submit" name="add" value="add">Add</button>
+</form>
+{% endblock %}

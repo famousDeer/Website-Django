@@ -1,0 +1,48 @@
+{% extends "main/base.html" %}
+{% load static %}
+
+{% block title %}View List{% endblock %}
+
+{% block todolist_navigation %}
+    <!-- Dodatkowe przyciski nawigacyjne specyficzne dla ToDoList -->
+    <a href="/create">Create</a>
+    <a href="/view">View</a>
+    
+{% endblock %}
+
+{% block content %}
+<link rel="stylesheet" href="{% static 'css/todolist.css' %}">  
+
+    <h1>{{ls.name}}</h1>
+    <form method="post" action="#">
+        {% csrf_token %}
+        {% for item in ls.item_set.all %}
+            <div class="form-control-list input-group mb-3">
+                {% if item.complete == True %}
+                <input type="checkbox" value="clicked" name="c{{item.id}}" id="checkbox{{item.id}}" checked>
+                <label class="form-control strike">{{item.text}}</label>
+                {% else %}
+                <input type="checkbox" value="clicked" name="c{{item.id}}" id="checkbox{{item.id}}">
+                <label class="form-control">{{item.text}}</label>
+                {% endif %}                
+
+                {% if item.to_trash == True %}
+                <input class="trash" type="checkbox" value="deleted" name="d{{item.id}}" id="checkbox{{item.id}}" checked>
+                {% else %}
+                <input class="trash" type="checkbox" value="deleted" name="d{{item.id}}" id="checkbox{{item.id}}">
+                {% endif %}
+            </div>
+        {% endfor %}
+        <div class="input-group mb-3">
+            <div class="input-group-prepend">
+                <button class="btn btn-primary me-2" type="submit" name="newItem" value="newItem">Add Item</button>
+            </div>
+            <input type="text" name="new" >
+        </div>
+        <div class="input-group">
+            <div class="input-group-prepend">
+                <button class="btn btn-success me-3" type="submit" name="save" value="save">Save</button>    
+            </div>
+        </div>
+    </form>
+{% endblock %}

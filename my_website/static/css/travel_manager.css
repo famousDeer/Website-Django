@@ -1,0 +1,18 @@
+.save{
+    float: right;
+}
+
+.img-fit{
+    width: 3%;
+    height: 3%;
+}
+
+label.form{
+    display: block;
+    width: 15%;
+}
+
+.btn-socials{
+    float: right;
+}
+
