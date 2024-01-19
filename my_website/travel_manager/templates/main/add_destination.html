@@ -7,8 +7,24 @@
 
 <form method="post" action="/add-destination">
     {% csrf_token %}
-    {{form.country}}
-    {{form.city}}
+    <table class="w-100 text-center">
+        <thead>
+            <tr>
+                <th scope="col">Country</th>
+                <th scope="col">City</th>
+                <th scope="col">TikTok</th>
+                <th scope="col">Instagram</th>
+            </tr>
+        </thead>
+        <tbody>
+            <tr>
+                <td>{{form.country}}</td>
+                <td>{{form.city}}</td>
+                <td>{{form.tiktok}}</td>
+                <td>{{form.instagram}}</td>
+            </tr>
+        </tbody>
+    </table>
     <button class="save" type="submit" name="add" value="add">Add</button>
 </form>
 {% endblock %}
