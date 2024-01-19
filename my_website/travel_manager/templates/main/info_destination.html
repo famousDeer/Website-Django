@@ -15,4 +15,12 @@
     <button class="btn-socials">TikTok</button>
     <button class="btn-socials me-3">Instagram</button>
 </div>
+<form method="post" action="{% url 'add_description' destinations.id %}">
+    {% csrf_token %}
+    <div class="mb-3 mt-5">
+        <label for="descriptions" class="form-label">Descriptions</label>
+        <textarea class="form-control" id="descriptions" name="descriptions{{destinations.id}}" rows="10">{{information.description}}</textarea>
+    </div>
+    <button type="submit" class="btn btn-primary" name="save">Save</button>
+</form>
 {% endblock %}
