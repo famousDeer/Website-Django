@@ -16,3 +16,7 @@ label.form{
     float: right;
 }
 
+textarea{
+    resize: none;
+}
+
