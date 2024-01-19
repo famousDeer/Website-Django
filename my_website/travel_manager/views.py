@@ -1,6 +1,6 @@
 from django.shortcuts import render
 from django.http import HttpResponseRedirect
-from .models import Destinations, Tiktok, Instagram
+from .models import Destinations
 from .forms import CreateNewDestination
 
 # Create your views here.
@@ -11,17 +11,10 @@ def add_destination(request):
         if form.is_valid():
             country_code = form.cleaned_data["country"]
             city = form.cleaned_data["city"]
-            tiktok = form.cleaned_data["tiktok"]
-            instagram = form.cleaned_data["instagram"]
             
             destination = Destinations(country=country_code,
                                        city=city)
-            tiktok = Tiktok(destinations=destination, link=tiktok)
-            instagram = Instagram(destinations=destination, link=instagram)
-            
             destination.save()
-            tiktok.save()
-            instagram.save()
             request.user.destination.add(destination)
 
         return HttpResponseRedirect("travel-manager")
