@@ -20,7 +20,7 @@
             <div class="form-control-list input-group mb-3">
                 {% if item.complete == True %}
                 <input type="checkbox" value="clicked" name="c{{item.id}}" id="checkbox{{item.id}}" checked>
-                <label class="form-control strike">{{item.text}}</label>
+                <label class="form-control finished">{{item.text}}</label>
                 {% else %}
                 <input type="checkbox" value="clicked" name="c{{item.id}}" id="checkbox{{item.id}}">
                 <label class="form-control">{{item.text}}</label>
