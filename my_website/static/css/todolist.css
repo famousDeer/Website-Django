@@ -59,6 +59,10 @@
     outline-offset: max(2px, 0.15em);
 }
 
+.form-control-list label.finished{
+  background-color: #23c963;
+}
+
 .button {
     display: inline-block;
     border-radius: 0.375rem;
