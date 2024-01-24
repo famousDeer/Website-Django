@@ -4,6 +4,7 @@ from django.contrib import messages
 from django.urls import reverse
 from .models import Destinations, Tiktok, Instagram, Information
 from .forms import CreateNewDestination
+import folium
 
 # Create your views here.
 
@@ -51,12 +52,26 @@ def delete(request, id):
     destination.delete()
     return redirect(reverse('travel-manager'))
 
-def travel_manager(request):
-    #TODO: Render information from database
-    return render(request, "main/travel_manager.html")
-
 def index(request, id):
     destination = Destinations.objects.get(id=id) 
     information = Information.objects.filter(destinations=destination).first()
-    return render(request, "main/info_destination.html", {"destinations":destination, "information": information})
+    interactive_map = folium.Map(location=[54.61215, 18.36001], zoom_start=16)
+    folium.Marker((54.61215, 18.36001)).add_to(interactive_map)
+
+    return render(request, "main/info_destination.html", {"destinations":destination, "information": information, "map": interactive_map._repr_html_})
+
+def tiktok(request, id):
+    destination = Destinations.objects.get(id=id)
+
+    if request.method == "POST":
+        if request.POST.get("newItem"):
+            text = request.POST.get("new")
+            if len(text.split("/")[-1]) < 19:
+                messages.error(request, "Wrong address, it must contain 19 digits at the end")
+            else:
+                destination.tiktok_set.create(link=text)
+    return render(request, "main/tiktok.html", {"tiktok_link":destination.tiktok_set.all()})
+
+def travel_manager(request):
+    return render(request, "main/travel_manager.html")
 
