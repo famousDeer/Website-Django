@@ -1,0 +1,80 @@
+{% extends "main/base.html" %} 
+{% load static %} 
+{% load poll_extras %}
+
+{% block title %}Tiktok sources{% endblock %} 
+
+{% block content%}
+<link rel="stylesheet" href="{% static 'css/travel_manager.css' %}">   
+<link rel="stylesheet" href="https://code.jquery.com/ui/1.12.1/themes/base/jquery-ui.css">
+
+<div class="d-flex justify-content-between align-items-center">
+    <h3 class="text-center mx-auto">{{destinations.country.name}} | {{destinations.city}}</h3>
+</div>
+<hr class="mt-4 mb-4">
+<h2>Select Range Date</h2>
+<form method="post">
+        {% csrf_token %}
+        {{ form.media }}
+        {{ form.as_p }}
+        <button type="submit" class="btn btn-outline-success">Create</button>
+</form>
+<div class="mt-5">
+    <div id="label-container" class="me-3">
+        {% for location in locations %}
+            <div class="draggable-item" data-date="{{ location.address }}" data-label="{{ location.address }}" style="background-color: {{ location.marker_color }}">
+                <label style="background-color: {{ location.marker_color }}; color: white;">{{ location.address }}</label>
+            </div>
+        {% endfor %}
+    </div>
+
+    {% for info in planner_info %}
+        <table class="droppable-table mb-5" data-date="{{ info.date }}">
+            <thead>
+                <tr>
+                    <th class="text-center">{{ info.date }}</th>
+                </tr>
+            </thead>
+            <tbody>
+                {% for label in info.labels %}
+                    <tr style="background-color: {{ label.color }};">
+                        <td>
+                            <label style="background-color: {{ label.color }}; color: white;">{{ label.text }}</label>
+                        </td>
+                    </tr>
+                {% endfor %}
+            </tbody>
+        </table>
+    {% endfor %}
+</div>
+
+<script src="https://code.jquery.com/jquery-3.6.4.min.js"></script>
+<script src="https://code.jquery.com/ui/1.12.1/jquery-ui.min.js"></script>
+<script>
+    $(function() {
+      $(".draggable-item").draggable({
+        revert: "invalid", // If not dropped, revert the element
+        helper: "clone" // Create a clone of the original element
+      });
+  
+      $(".droppable-table").droppable({
+        accept: ".draggable-item", // Accept only elements with this class
+        drop: function(event, ui) {
+          var droppedText = ui.helper.text().trim(); // Remove leading and trailing whitespaces
+          var droppedColor = ui.helper.css('background-color'); // Get the background color
+          var droppedLabel = ui.helper.data('label'); // Get the label text
+  
+          // Check if the label is not already in the table
+          if ($(this).find("td:contains('" + droppedLabel + "')").length === 0) {
+            // Append the text to the existing content of the table body
+            var targetBody = $(this).find("tbody");
+            targetBody.append('<tr style="background-color: ' + droppedColor + ';"><td><label style="background-color: ' + droppedColor + '; color: white;">' + droppedText + '</label></td></tr>');
+  
+            // Remove the original dragged element from the label-container
+            $("#label-container").find("[data-label='" + droppedLabel + "']").remove();
+          }
+        }
+      });
+    });
+  </script>
+{% endblock %}

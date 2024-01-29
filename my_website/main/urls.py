@@ -10,5 +10,4 @@ urlpatterns = [
     path("view/", views.view, name="view"),
     path("todolist/", views.todolist, name="todolist"),
     path("view/delete/<int:id>", views.delete, name="delete"),
-
 ]

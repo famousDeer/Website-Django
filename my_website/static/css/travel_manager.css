@@ -77,3 +77,25 @@ textarea{
     padding: 0 40px;
   }
 }
+
+.draggable-item {
+  color: #ffffff;
+  padding: 5px;
+  margin: 5px;
+  cursor: move;
+  display: inline-block;
+}
+
+.droppable-table {
+  width: 100%;
+  border-collapse: collapse;
+  border: 1px solid #ddd; /* Dodane obramowanie */
+  margin-top: 10px; /* Odstęp od góry */
+}
+
+.droppable-table th,
+.droppable-table td {
+  border: 1px solid #ddd;
+  padding: 8px;
+  text-align: left;
+}

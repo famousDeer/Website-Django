@@ -57,6 +57,7 @@ INSTALLED_APPS = [
     'travel_manager.apps.TravelManagerConfig',
     'django_countries',
     'embed_video',
+    'bootstrap_datepicker_plus',
 ]
 
 MIDDLEWARE = [
