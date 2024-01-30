@@ -10,13 +10,13 @@ class Destinations(models.Model):
     user = models.ForeignKey(User, on_delete=models.CASCADE, related_name="destination", null=True)
     country = CountryField()
     city = models.CharField(max_length=100)
+    latitude = models.FloatField()
+    longitude = models.FloatField()
 
 class Information(models.Model):
     destinations = models.ForeignKey(Destinations, on_delete=models.CASCADE)
     fly_cost = models.FloatField()
     description = models.TextField()
-    latitude = models.FloatField()
-    longitude = models.FloatField()
     
 class Tiktok(models.Model):
     destinations = models.ForeignKey(Destinations, on_delete=models.CASCADE)
@@ -33,6 +33,7 @@ class Location_address(models.Model):
     longitude = models.FloatField()
     icon = models.CharField(max_length=100, default="location-pin")
     marker_color = models.CharField(max_length=50, default="red")
+    inside_planner = models.BooleanField(default=False)
 
 class Planner_Date(models.Model):
     destinations = models.ForeignKey(Destinations, on_delete=models.CASCADE)

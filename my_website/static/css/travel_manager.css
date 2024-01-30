@@ -99,3 +99,8 @@ textarea{
   padding: 8px;
   text-align: left;
 }
+
+.highlighted {
+  background-color: #308bdb;
+}
+
