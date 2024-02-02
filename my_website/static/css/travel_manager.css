@@ -72,6 +72,33 @@ textarea{
   outline: 0;
 }
 
+.fa-dollar-sign {
+  color: #3aa71c;
+  transform: translateY(-1px);
+  margin-right: 5px;
+}
+
+.fa-book-bookmark {
+  color: #654205;
+  transform: translateY(-1px);
+  margin-right: 5px;
+}
+
+.fa-tiktok {
+  transform: translateY(-1px);
+  margin-right: 5px;
+}
+
+@keyframes spin {
+  0% { transform: rotate(0deg); }
+  100% { transform: rotate(360deg); }
+}
+
+@keyframes move-up-down {
+  0%, 100% { transform: translateY(0); }
+  50% { transform: translateY(-10px); }
+}
+
 @media (min-width: 768px) {
   .btn-socials {
     padding: 0 40px;
@@ -102,5 +129,52 @@ textarea{
 
 .highlighted {
   background-color: #308bdb;
+}
+
+.btn.btn-danger.form-control {
+  position: relative;
+  overflow: hidden;
+}
+
+.btn.btn-danger.form-control:hover .fa-trash,
+.btn.btn-danger.form-control:hover span {
+  animation: beat-fade 1s infinite linear;
+}
+
+@keyframes beat-fade {
+  0%, 100% { transform: scale(1); opacity: 1; }
+  50% { transform: scale(1.1); opacity: 0.5; }
+}
+
+.input-euro {
+  position: relative;
+}
+
+.input-euro.right input {
+  padding-right:18px;
+  text-align:end; 
+}
+
+.input-euro:before {
+  position: absolute;
+  top: 0;
+  content:"€";
+}
+
+.input-euro.right:before {
+  right: 5px;
+  top: 6px;
+}
+
+.planner-table-description{
+  width: 50%;
+}
+
+.planner-table-address{
+  width: 25%;
+}
+
+.planner-table-price{
+  width: 25%;
 }
 

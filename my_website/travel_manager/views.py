@@ -7,9 +7,9 @@ from django.views import View
 from datetime import timedelta
 from datetime import datetime
 
-from .models import Destinations, Tiktok, Instagram, Information, Location_address, Planner_Date, Planner_Descriptions
+from .models import Destinations, Tiktok, Information, Location_address, Planner_Date, Planner_Table_Date, Planner_Table_Descriptions
 from .forms import CreateNewDestination, DateForm
-from .utils.utils import find_location_coordinates, different_days_in_db
+from .utils.utils import find_location_coordinates, different_days_in_db, get_cleared_url
 
 
 # Creating class views
@@ -31,6 +31,8 @@ class AddAddressPoint(View):
         destination = Destinations.objects.get(id=id)
         submitted_address = request.POST.get("add_address")
         object_type = request.POST.get("object_type")
+        address_description = request.POST.get("address_description")
+        price = request.POST.get("price")
 
         if not submitted_address:
             messages.error(request, "You need to write an address")
@@ -46,7 +48,9 @@ class AddAddressPoint(View):
                                                     latitude=loc_coordinates['latitude'],
                                                     longitude=loc_coordinates['longitude'],
                                                     icon=self.icons[object_type][0],
-                                                    marker_color=self.icons[object_type][1])
+                                                    marker_color=self.icons[object_type][1],
+                                                    descriptions=address_description,
+                                                    price=price)
                 
         return redirect(reverse(self.view_name, args=[destination.id]))
 
@@ -90,7 +94,6 @@ class AddDestination(View):
             country_code = form.cleaned_data["country"]
             city = form.cleaned_data["city"]
             tiktok = form.cleaned_data["tiktok"]
-            instagram = form.cleaned_data["instagram"]
             coordinates = find_location_coordinates({"city":city, "country_code": country_code}, featuretype="city")
 
             destination = Destinations(country=country_code,
@@ -98,11 +101,9 @@ class AddDestination(View):
                                        latitude=coordinates["latitude"],
                                        longitude=coordinates["longitude"])
             tiktok = Tiktok(destinations=destination, link=tiktok)
-            instagram = Instagram(destinations=destination, link=instagram)
 
             destination.save()
             tiktok.save()
-            instagram.save()
             request.user.destination.add(destination)
 
         return redirect(reverse(self.view_name))
@@ -144,66 +145,63 @@ class PlannerView(View):
               "rgb(255, 0, 0)":"#bc2c2c",
               "rgb(128, 0, 128)":"#9d32d6"}
 
-    def get(self, request, id):
+    def get_info_from_db(self, id):
         destination_db = Destinations.objects.get(id=id)
         location_address = Location_address.objects.filter(destinations=destination_db).all()
-        planner_db = Planner_Date.objects.filter(destinations=destination_db).first()
-        initial_data = {}
+        planner_date = Planner_Date.objects.filter(destinations=destination_db).first()
         
-        if planner_db:
-            initial_data["start_date"] = planner_db.start_date
-            initial_data["end_date"] = planner_db.end_date
-            planner_daily_db = Planner_Descriptions.objects.filter(planner_date_id=planner_db.id).all()
+        return destination_db, location_address, planner_date
+    
+    def get_initial_date(self, planner_date):
+        initial_data = {}
+        if planner_date:
+            initial_data["start_date"] = planner_date.start_date
+            initial_data["end_date"] = planner_date.end_date
+            planner_table_date = Planner_Table_Date.objects.filter(planner_date_id=planner_date.id).all()
         else:
-            planner_daily_db = Planner_Descriptions.objects.none()
+            planner_table_date = Planner_Table_Date.objects.none()
 
+        return initial_data, planner_table_date
+    
+    def create_date_range(self, planner_date):
+        time_difference = planner_date.end_date - planner_date.start_date
+        for i in range(time_difference.days + 1):
+            Planner_Table_Date.objects.create(planner_date=planner_date,
+                                              date=planner_date.start_date + timedelta(days=i))
+
+        return Planner_Table_Date.objects.filter(planner_date_id=planner_date.id).all()
+
+    def get(self, request, id):
+        destination_db, location_address, planner_date = self.get_info_from_db(id)
+        initial_data, planner_table_date = self.get_initial_date(planner_date)
         form = DateForm(initial=initial_data)
+
         return render(request, self.template_name, {"destinations": destination_db,
                                                     "form": form,
-                                                    "planner_info": planner_daily_db,
+                                                    "planner_table_dates": planner_table_date,
                                                     "locations": location_address})
 
     def post(self, request, id):
-        destination_db = Destinations.objects.get(id=id)
-        location_address = Location_address.objects.filter(destinations=destination_db).all()
-        planner_db = Planner_Date.objects.filter(destinations=destination_db).first()
-        initial_data = {}
-        if planner_db:
-            planner_daily_db = Planner_Descriptions.objects.filter(planner_date_id=planner_db.id).all()
-            initial_data["start_date"] = planner_db.start_date
-            initial_data["end_date"] = planner_db.end_date
-        else:
-            planner_daily_db = Planner_Descriptions.objects.none()
-
+        destination_db, location_address, planner_date = self.get_info_from_db(id)
+        initial_data, planner_table_date = self.get_initial_date(planner_date)
         form = DateForm(request.POST, initial=initial_data)
 
         if form.is_valid():
-            if planner_db:
-                if different_days_in_db(planner_db, form):
+            if planner_date:
+                if different_days_in_db(planner_date, form):
                     for locations in location_address:
                         locations.inside_planner = False
                         locations.save()
-                    planner_db.start_date = form.cleaned_data["start_date"]
-                    planner_db.end_date = form.cleaned_data["end_date"]
-                    planner_db.save()
-                    Planner_Descriptions.objects.filter(planner_date=planner_db).delete() # Clear table from any data
-                    time_difference = planner_db.end_date - planner_db.start_date
-                    for i in range(time_difference.days + 1):
-                        Planner_Descriptions.objects.create(planner_date=planner_db,
-                                                            date=planner_db.start_date + timedelta(days=i),
-                                                            descriptions="")
-                    planner_daily_db = Planner_Descriptions.objects.filter(planner_date_id=planner_db.id).all()
+                    planner_date.start_date = form.cleaned_data["start_date"]
+                    planner_date.end_date = form.cleaned_data["end_date"]
+                    planner_date.save()
+                    Planner_Table_Date.objects.filter(planner_date=planner_date).delete() # Clear table from any data
+                    planner_table_date = self.create_date_range(planner_date)
             else:
-                planner_db = Planner_Date(destinations=destination_db,
-                                          start_date=form.cleaned_data["start_date"],
-                                          end_date=form.cleaned_data["end_date"])
-                planner_db.save()
-                time_difference = planner_db.end_date - planner_db.start_date
-                for i in range(time_difference.days + 1):
-                    Planner_Descriptions.objects.create(planner_date=planner_db,
-                                                        date=planner_db.start_date + timedelta(days=i),
-                                                        descriptions="")
-                planner_daily_db = Planner_Descriptions.objects.filter(planner_date_id=planner_db.id).all()
+                planner_date = Planner_Date.objects.create(destinations=destination_db,
+                                                           start_date=form.cleaned_data["start_date"],
+                                                           end_date=form.cleaned_data["end_date"])
+                planner_table_date = self.create_date_range(planner_date)
 
         else:
             table_date = request.POST.get('table_header')
@@ -215,29 +213,49 @@ class PlannerView(View):
             location = Location_address.objects.filter(destinations_id=destination_db, id=request.POST.get('id')).first()
             location.inside_planner = True
             location.save()
-            planner_daily_db = Planner_Descriptions.objects.filter(planner_date_id=planner_db.id, date=formatted_date).first()
-            planner_daily_db.descriptions += request.POST.get('text') + ":" + self.colors[request.POST.get('color')] + ";"
-            planner_daily_db.save()
-            planner_daily_db = Planner_Descriptions.objects.filter(planner_date_id=planner_db.id).all()
+            planner_table_date = Planner_Table_Date.objects.get(planner_date_id=planner_date.id, date=formatted_date)
+            planner_table_description = Planner_Table_Descriptions.objects.create(planner_table_date=planner_table_date,
+                                                                                  location_address=location,
+                                                                                  descriptions=request.POST.get('text'),
+                                                                                  color_label=self.colors[request.POST.get('color')])
+            planner_table_date = Planner_Table_Date.objects.filter(planner_date_id=planner_date.id).all()
 
         return render(request, self.template_name, {"destinations": destination_db,
                                                     "form": form,
-                                                    "planner_info": planner_daily_db,
+                                                    "planner_table_dates": planner_table_date,
                                                     "locations": location_address})
 
-# Create your views here.
+class TikTokView(View):
 
-def tiktok(request, id):
-    destination = Destinations.objects.get(id=id)
+    template_name = "main/tiktok.html"
 
-    if request.method == "POST":
+    def get(self, request, id):
+        destination = Destinations.objects.get(id=id)
+        tiktok = Tiktok.objects.filter(destinations=destination).all()
+        return render(request, self.template_name, {"tiktok_link":tiktok})
+
+    def post(self, request, id):
+        destination = Destinations.objects.get(id=id)
+        delete_id = request.POST.get("delete")
         if request.POST.get("newItem"):
-            text = request.POST.get("new")
+            text = get_cleared_url(request.POST.get("new"))
             if len(text.split("/")[-1]) < 19:
                 messages.error(request, "Wrong address, clear box and look at example")
             else:
-                destination.tiktok_set.create(link=text)
-    return render(request, "main/tiktok.html", {"tiktok_link":destination.tiktok_set.all()})
+                tiktok = Tiktok.objects.create(destinations=destination,
+                                               link=text)
 
-def travel_manager(request):
-    return render(request, "main/travel_manager.html")
+            return redirect(reverse('tiktok', args=[id]))
+        elif delete_id:
+            tiktok = Tiktok.objects.get(id=delete_id)
+            messages.info(request, f"Successfully deleted {tiktok.link}")
+            tiktok.delete()
+        
+        return redirect(reverse('tiktok', args=[id]))
+        
+class TravelManagerView(View):
+    template_name = "main/travel_manager.html"
+    
+    def get(self, request):
+        return render(request, self.template_name)
+

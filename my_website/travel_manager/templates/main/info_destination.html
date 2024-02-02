@@ -12,8 +12,8 @@
 <hr class="mt-4 mb-4">
 
 <div class="justify-content-end">
-    <a href="tiktok/{{destinations.id}}" class="btn-socials">TikTok</a>
-    <a href="planner/{{destinations.id}}" class="btn-socials me-3">Planner</a>
+    <a href="tiktok/{{destinations.id}}" class="btn-socials"><i class="fa-brands fa-tiktok"></i>TikTok</a>
+    <a href="planner/{{destinations.id}}" class="btn-socials me-3"><i class="fas fa-book-bookmark"></i>Planner</a>
 </div>
 <form method="post" action="{% url 'add_description' destinations.id %}">
     {% csrf_token %}
@@ -39,7 +39,15 @@
             <option value="Shops">Shops</option>
         </select>
     </div>
-    <button type="submit" class="btn btn-primary mb-3" name="save">Submit</button>
+    <div class="input-group">
+        <div class="form-floating">
+            <input class="form-control" type="text" name="address_description" placeholder="Address">
+            <label for="address_description">Desciription</label>
+        </div>
+        <input class="form-control" type="number" step="0.01" min="0" name="price" placeholder="Price">
+        <span class="input-group-text">$</span>
+    </div>
+    <button type="submit" class="btn btn-primary mt-3 mb-3" name="save">Submit</button>
 </form>
 <div class="mt-3">{{ map|safe }}</div>
 {% endblock %}

@@ -23,47 +23,65 @@
     <div id="label-container" class="me-3">
         {% for location in locations %}
             {% if location.inside_planner == False %}
-                <div class="draggable-item" data-id="{{ location.id }}" data-label="{{ location.address }}" style="background-color: {{ location.marker_color }}">
-                    <label style="background-color: {{ location.marker_color }}; color: white;">{{ location.address }}</label>
+                <div class="draggable-item" data-id="{{ location.id }}" data-label="{{ location.descriptions }}" style="background-color: {{ location.marker_color }}">
+                    <label style="background-color: {{ location.marker_color }}; color: white;">{{ location.descriptions }}</label>
                 </div>
             {% endif %}
         {% endfor %}
     </div>
-
-    {% for info in planner_info %}
-        <table class="droppable-table mb-5" data-date="{{ info.date }}">
-            <thead>
-                <tr>
-                    <th class="text-center">{{ info.date }}</th>
-                </tr>
-            </thead>
-            <tbody>
-                {% if info.labels %}
-                    {% for label in info.labels %}
-                        <tr style="background-color: {{ label.color }};">
-                            <td>
-                                <label style="background-color: {{ label.color }}; color: white;">{{ label.text }}</label>
-                            </td>
-                        </tr>
-                    {% endfor %}
-                {% else %}
-                        {% for description in info.descriptions|split:";" %}
-                            {% if description %}
-                                <tr style="background-color: {{description|split:":"|last}}; color: white;">
-                                    <td>
-                                        {{ description|split:":"|first }}
-                                    </td>
-                                </tr>
-                            {% endif %}
-                        {% endfor %}
-                {% endif %}
-            </tbody>
-        </table>
-    {% endfor %}
+      {% for planner_table_date in planner_table_dates %}
+          <table class="droppable-table mb-5" data-date="{{ planner_table_date.date }}">
+              <thead>
+                  <tr>
+                      <th class="text-center" colspan="3">{{ planner_table_date.date  }}</th>
+                  </tr>
+                  <tr>
+                    <th class="planner-table-description">Description</th>
+                    <th class="planner-table-address">Address</th>
+                    <th class="planner-table-price">Price</th>
+                  </tr>
+              </thead>
+              <tbody>
+                  {% for planner_table_description in planner_table_date.planner_table_descriptions_set.all %}
+                      <tr style="background-color: {{planner_table_description.color_label}}; color: white;">
+                          <td class="planner-table-description">
+                            <i class="fas fa-{{planner_table_description.location_address.icon}}"></i> {{ planner_table_description.descriptions }}
+                          </td>
+                          <td class="planner-table-address">
+                              <i class="fas fa-map map-icon" data-address="{{ planner_table_description.location_address.address }}" style="cursor: pointer"> Click to copy</i>
+                          </td>
+                          <td class="planner-table-price">
+                              {{ planner_table_description.location_address.price|floatformat:"2" }}
+                          </td>
+                      </tr>
+                  {% endfor %}
+                    <tr>
+                      <td class="text-center" colspan="2">Total</td>
+                      <td id="total-price"></td>
+                    </tr>
+              </tbody>
+          </table>
+      {% endfor %}
 </div>
 
 <script src="https://code.jquery.com/jquery-3.6.4.min.js"></script>
 <script src="https://code.jquery.com/ui/1.12.1/jquery-ui.min.js"></script>
+<script>
+  $(".droppable-table").each(function() {
+      var total = 0;
+
+      $(this).find(".planner-table-price").each(function() {
+          var priceText = $(this).text().replace(",", ".");
+          var priceValue = parseFloat(priceText);
+
+          if (!isNaN(priceValue)) {
+              total += priceValue;
+          }
+      });
+      var formattedTotal = total.toFixed(2);
+      $(this).find("#total-price").html('<span style="position: relative; top: -1px; display: inline-block;">$</span>' + formattedTotal);
+  });
+</script>
 <script>
     $(function() {
      
@@ -131,7 +149,21 @@
           }
   
           $(this).removeClass("highlighted");
-        }
+
+          setTimeout(function() {
+            location.reload();
+        }, 50);
+      }
+      });
+      // Click event for copying address on map icon click
+      $(".map-icon").on("click", function() {
+        var addressToCopy = $(this).data('address');
+        var dummyInput = document.createElement("input");
+        document.body.appendChild(dummyInput);
+        dummyInput.setAttribute('value', addressToCopy);
+        dummyInput.select();
+        document.execCommand('copy');
+        document.body.removeChild(dummyInput);
       });
     });
   </script>

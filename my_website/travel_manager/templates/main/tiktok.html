@@ -15,29 +15,30 @@
         </div>
         <input class="form-control" type="text" name="new" placeholder="Example: https://www.tiktok.com/@user/video/7286118322892999969">
     </div>
+    <div class="container">
+        {% for link in tiktok_link %}
+            {% if forloop.first %}
+                <div class="row">
+            {% elif forloop.counter0|divisibleby:3 %}
+                </div>
+                <div class="row">
+            {% endif %}
+                <div class="col-md-4">
+                    <button type="submit" name="delete" value="{{link.id}}" class="btn btn-danger form-control"><i class="fas fa-trash"></i> <span>Delete</span></button>
+                    <blockquote 
+                        class="tiktok-embed" 
+                        cite={{ link.link }} 
+                        data-video-id={{ link.link|split:"/"|last }}
+                        style="max-width: 605px;min-width: 325px;"
+                    >
+                    <section></section>
+                    </blockquote>
+                </div>
+            {% if forloop.last %}
+                </div>
+            {% endif %}
+        {% endfor %}
+    </div>
 </form>
-<div class="container">
-    {% for link in tiktok_link %}
-        {% if forloop.first %}
-            <div class="row">
-        {% elif forloop.counter0|divisibleby:3 %}
-            </div>
-            <div class="row">
-        {% endif %}
-            <div class="col-md-4">
-                <blockquote 
-                    class="tiktok-embed" 
-                    cite={{ link.link }} 
-                    data-video-id={{ link.link|split:"/"|last }}
-                    style="max-width: 605px;min-width: 325px;"
-                >
-                <section></section>
-                </blockquote>
-            </div>
-        {% if forloop.last %}
-            </div>
-        {% endif %}
-    {% endfor %}
-</div>
 <script async src="https://www.tiktok.com/embed.js"></script>
 {% endblock %}

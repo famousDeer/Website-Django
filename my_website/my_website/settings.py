@@ -58,6 +58,7 @@ INSTALLED_APPS = [
     'django_countries',
     'embed_video',
     'bootstrap_datepicker_plus',
+    'fontawesomefree',
 ]
 
 MIDDLEWARE = [

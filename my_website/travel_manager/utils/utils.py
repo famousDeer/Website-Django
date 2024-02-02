@@ -1,5 +1,7 @@
 from geopy.geocoders import Nominatim
 
+import requests
+
 def find_location_coordinates(address, featuretype=None):
     nomination = Nominatim(user_agent="http://127.0.0.1:8000/")
     localization = nomination.geocode(address, exactly_one=False, extratags=True, featuretype=featuretype)
@@ -18,3 +20,12 @@ def different_days_in_db(db, days):
         return False
     
     return True
+
+def get_cleared_url(url):
+    if "vm.tiktok.com" in url:
+        response = requests.get(url)
+        if response.status_code == 200:
+            url = response.url
+
+    parts = url.split("?")[0]
+    return parts
