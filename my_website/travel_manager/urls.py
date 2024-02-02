@@ -10,4 +10,5 @@ urlpatterns = [
     path('travel-manager/add-address-point/<int:id>', views.AddAddressPoint.as_view(), name='add_address_point'),
     path('travel-manager/tiktok/<int:id>', views.TikTokView.as_view(), name='tiktok'),
     path('travel-manager/planner/<int:id>', views.PlannerView.as_view(), name='planner'),
+    path('travel-manager/documents/<int:id>', views.DocumentsView.as_view(), name='documents'),
 ]

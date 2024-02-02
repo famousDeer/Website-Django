@@ -47,4 +47,8 @@ class Planner_Table_Descriptions(models.Model):
     location_address = models.ForeignKey(Location_address, on_delete=models.CASCADE)
     descriptions = models.TextField()
     color_label = models.TextField()
+
+class Documents(models.Model):
+    destinations = models.ForeignKey(Destinations, on_delete=models.CASCADE)
+    file = models.FileField(upload_to="Media/")
     

@@ -4,11 +4,12 @@ from django.shortcuts import render, redirect
 from django.contrib import messages
 from django.urls import reverse
 from django.views import View
+from django.http import FileResponse
 from datetime import timedelta
 from datetime import datetime
 
-from .models import Destinations, Tiktok, Information, Location_address, Planner_Date, Planner_Table_Date, Planner_Table_Descriptions
-from .forms import CreateNewDestination, DateForm
+from .models import Destinations, Tiktok, Information, Location_address, Planner_Date, Planner_Table_Date, Planner_Table_Descriptions, Documents
+from .forms import CreateNewDestination, DateForm, DocumentsForm
 from .utils.utils import find_location_coordinates, different_days_in_db, get_cleared_url
 
 
@@ -226,8 +227,8 @@ class PlannerView(View):
                                                     "locations": location_address})
 
 class TikTokView(View):
-
     template_name = "main/tiktok.html"
+    view_name = "tiktok"
 
     def get(self, request, id):
         destination = Destinations.objects.get(id=id)
@@ -245,17 +246,41 @@ class TikTokView(View):
                 tiktok = Tiktok.objects.create(destinations=destination,
                                                link=text)
 
-            return redirect(reverse('tiktok', args=[id]))
+            return redirect(reverse(self.view_name, args=[id]))
         elif delete_id:
             tiktok = Tiktok.objects.get(id=delete_id)
             messages.info(request, f"Successfully deleted {tiktok.link}")
             tiktok.delete()
         
-        return redirect(reverse('tiktok', args=[id]))
+        return redirect(reverse(self.view_name, args=[id]))
         
 class TravelManagerView(View):
     template_name = "main/travel_manager.html"
     
     def get(self, request):
         return render(request, self.template_name)
+    
+class DocumentsView(View):
+    template_name = "main/documents.html"
+    view_name = "documents"
 
+    def get(self, request, id):
+        form = DocumentsForm()
+        documents = Documents.objects.filter(destinations_id=id).all()
+        return render(request, self.template_name, {'form': form, 'documents': documents})
+    
+    def post(self, request, id):
+        destination = Destinations.objects.get(id=id)
+        form = DocumentsForm(request.POST, request.FILES)
+
+        if form.is_valid():
+            documents = form.save(commit=False)
+            documents.destinations = destination
+            documents.save()
+            return redirect(reverse(self.view_name, args=[id]))
+    
+        return render(request, self.template_name, {'form': form})
+    
+        # try:
+            # return FileResponse(open('Media/cv_ENG.pdf', 'rb'), content_type='application/pdf')
+        # except FileNotFoundError:

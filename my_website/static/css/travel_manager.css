@@ -89,6 +89,11 @@ textarea{
   margin-right: 5px;
 }
 
+.fa-file {
+  color: #000000;
+  transform: translateY(-1px);
+  margin-right: 5px;
+}
 @keyframes spin {
   0% { transform: rotate(0deg); }
   100% { transform: rotate(360deg); }
@@ -111,6 +116,10 @@ textarea{
   margin: 5px;
   cursor: move;
   display: inline-block;
+}
+
+.draggable-item label{
+  width: fit-content;
 }
 
 .droppable-table {
@@ -144,26 +153,6 @@ textarea{
 @keyframes beat-fade {
   0%, 100% { transform: scale(1); opacity: 1; }
   50% { transform: scale(1.1); opacity: 0.5; }
-}
-
-.input-euro {
-  position: relative;
-}
-
-.input-euro.right input {
-  padding-right:18px;
-  text-align:end; 
-}
-
-.input-euro:before {
-  position: absolute;
-  top: 0;
-  content:"€";
-}
-
-.input-euro.right:before {
-  right: 5px;
-  top: 6px;
 }
 
 .planner-table-description{
