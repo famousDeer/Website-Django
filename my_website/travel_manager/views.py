@@ -284,3 +284,13 @@ class DocumentsView(View):
         # try:
             # return FileResponse(open('Media/cv_ENG.pdf', 'rb'), content_type='application/pdf')
         # except FileNotFoundError:
+
+class BudgetView(View):
+    template_name = "main/budget.html"
+    view_name = "budget"
+
+    def get(self, request, id):
+        return render(request, self.template_name)
+
+    def post(self, request, id):
+        pass
