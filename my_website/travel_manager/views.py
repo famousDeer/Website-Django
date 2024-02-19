@@ -44,14 +44,20 @@ class AddAddressPoint(View):
             if loc_coordinates is None:
                 messages.error(request, "Wrong address")
             else:
-                _ = Location_address.objects.create(destinations=destination,
-                                                    address=loc_coordinates['address'],
-                                                    latitude=loc_coordinates['latitude'],
-                                                    longitude=loc_coordinates['longitude'],
-                                                    icon=self.icons[object_type][0],
-                                                    marker_color=self.icons[object_type][1],
-                                                    descriptions=address_description,
-                                                    price=price)
+                location_address = Location_address.objects.create(destinations=destination,
+                                                                   address=loc_coordinates['address'],
+                                                                   latitude=loc_coordinates['latitude'],
+                                                                   longitude=loc_coordinates['longitude'],
+                                                                   icon=self.icons[object_type][0],
+                                                                   marker_color=self.icons[object_type][1],
+                                                                   descriptions=object_type)
+        if price != '':
+            location_address.price = price
+        
+        if address_description != '':
+            location_address.descriptions = address_description
+        
+        location_address.save()
                 
         return redirect(reverse(self.view_name, args=[destination.id]))
 
@@ -101,10 +107,11 @@ class AddDestination(View):
                                        city=city,
                                        latitude=coordinates["latitude"],
                                        longitude=coordinates["longitude"])
-            tiktok = Tiktok(destinations=destination, link=tiktok)
+            if tiktok != '':
+                tiktok = Tiktok(destinations=destination, link=tiktok)
+                tiktok.save()
 
             destination.save()
-            tiktok.save()
             request.user.destination.add(destination)
 
         return redirect(reverse(self.view_name))
@@ -126,13 +133,13 @@ class InfoDestination(View):
         information = Information.objects.filter(destinations=destination).first()
         location_address = Location_address.objects.filter(destinations=destination).all()
         interactive_map = folium.Map(location=[destination.latitude, destination.longitude], zoom_start=14)
-        folium.Marker((destination.latitude, destination.longitude),
-                      icon=folium.Icon(color='blue', prefix='fa')
-                      ).add_to(interactive_map)
+        # folium.Marker((destination.latitude, destination.longitude),
+        #               icon=folium.Icon(color='blue', prefix='fa')
+        #               ).add_to(interactive_map)
         if location_address is not None:
             for location in location_address:
                 folium.Marker((location.latitude, location.longitude),
-                              popup=location.address,
+                              popup=location.descriptions,
                               icon=folium.Icon(color=location.marker_color, icon=location.icon, prefix='fa')
                               ).add_to(interactive_map)
 
@@ -207,7 +214,7 @@ class PlannerView(View):
         else:
             table_date = request.POST.get('table_header')
             try:
-                date = datetime.strptime(table_date, "%b %d, %Y")
+                date = datetime.strptime(table_date, "%B %d, %Y")
             except ValueError:
                 date = datetime.strptime(table_date, "%b. %d, %Y")
             formatted_date = date.strftime("%Y-%m-%d")
@@ -267,6 +274,9 @@ class DocumentsView(View):
     def get(self, request, id):
         form = DocumentsForm()
         documents = Documents.objects.filter(destinations_id=id).all()
+        if "open-file" in request.path:
+            document = Documents.objects.filter(id=id).first()
+            return FileResponse(document.file, content_type='application/pdf')
         return render(request, self.template_name, {'form': form, 'documents': documents})
     
     def post(self, request, id):
@@ -280,7 +290,7 @@ class DocumentsView(View):
             return redirect(reverse(self.view_name, args=[id]))
     
         return render(request, self.template_name, {'form': form})
-    
+
         # try:
             # return FileResponse(open('Media/cv_ENG.pdf', 'rb'), content_type='application/pdf')
         # except FileNotFoundError:

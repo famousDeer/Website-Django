@@ -4,9 +4,9 @@ from bootstrap_datepicker_plus.widgets import DatePickerInput
 from .models import Documents
 
 class CreateNewDestination(forms.Form):
-    country = CountryField().formfield(label="country")
-    city = forms.CharField(label="city", max_length=100)
-    tiktok = forms.CharField(label="tiktok", max_length=200)
+    country = CountryField(blank_label="Select Country").formfield(label="country")
+    city = forms.CharField(label="city", max_length=128)
+    tiktok = forms.CharField(label="tiktok", max_length=256, required=False)
 
 class DateForm(forms.Form):
     start_date = forms.DateField(

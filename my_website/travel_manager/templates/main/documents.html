@@ -9,8 +9,38 @@
 
 <form method="post" enctype="multipart/form-data">
     {% csrf_token %}
-    {{ form.as_table }}
-    <button type="submit" class="btn btn-primary" name="save">Save</button>
+    {{ form.as_p }}
+    <button type="submit" class="btn btn-primary mb-3" name="save">Upload <i class="fa-solid fa-paper-plane"></i></button>
 </form>
 
+<table class="w-100 text-center table table-bordered table table-hover" id="documents-table">
+    <thead>
+        <tr>
+            <th scope="col">File</th>
+        </tr>
+    </thead>
+    <tbody>
+        {% for document in documents%}
+        <tr class="document-row" data-url="{% url 'open-file' document.id %}">
+            <td>{{document.file.name|basename}}</td>
+        </tr>
+        {% endfor %}
+    </tbody>
+</table>
+<script>
+    document.addEventListener("DOMContentLoaded", function() {
+        // Znajdź wszystkie wiersze z klasą "document-row"
+        var rows = document.querySelectorAll(".document-row");
+        
+        // Dla każdego wiersza dodaj obsługę kliknięcia
+        rows.forEach(function(row) {
+            row.addEventListener("click", function() {
+                // Pobierz URL do przekierowania z atrybutu "data-url" wiersza
+                var url = this.getAttribute("data-url");
+                // Przekieruj użytkownika do określonego URL
+                window.location.href = url;
+            });
+        });
+    });
+</script>
 {% endblock %}
