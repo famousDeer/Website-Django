@@ -1,4 +1,5 @@
 from django import template
+import os
 
 register = template.Library()
 
@@ -11,3 +12,12 @@ def split(value, arg):
         arg (string): Separator
     """
     return value.split(arg)
+
+@register.filter(name="basename")
+def basename(value):
+    """Taking the name of file without dir
+
+    Args:
+        value (string): URL of file
+    """
+    return os.path.basename(value)

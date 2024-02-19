@@ -12,15 +12,24 @@
     <h3 class="text-center mx-auto">{{destinations.country.name}} | {{destinations.city}}</h3>
 </div>
 <hr class="mt-4 mb-4">
-<h2>Select Range Date</h2>
-<form method="post">
-        {% csrf_token %}
-        {{ form.media }}
-        {{ form.as_p }}
-        <button type="submit" class="btn btn-outline-success">Create</button>
-</form>
+<div class="container mt-5">
+  <div class="row justify-content-center">
+      <div class="col-md-5">
+          <div class="shadow p-4 rounded bg-view bg-second-color">
+              <h2 class="text-center mb-4">Select Range Date</h2>
+              <form method="post" class="text-center">
+                  {% csrf_token %}
+                  {{ form.media }}
+                  {{ form.as_p }}
+                  <button type="submit" class="save">Create</button>
+              </form>
+          </div>
+      </div>
+  </div>
+</div>
+
 <div class="mt-5">
-    <div id="label-container" class="me-3">
+    {% comment %} <div id="label-container" class="me-3">
         {% for location in locations %}
             {% if location.inside_planner == False %}
                 <div class="draggable-item" data-id="{{ location.id }}" data-label="{{ location.descriptions }}" style="background-color: {{ location.marker_color }}">
@@ -28,44 +37,66 @@
                 </div>
             {% endif %}
         {% endfor %}
+    </div> {% endcomment %}
+    <div class="mt-5 sticky-labels">
+          <div id="label-container">
+            {% for location in locations %}
+                {% if location.inside_planner == False %}
+                    <div class="form-group row draggable-item" data-id="{{ location.id }}" data-label="{{ location.descriptions }}" style="background-color: {{ location.marker_color }}">
+                        <label style="col background-color: {{ location.marker_color }}; color: white;">{{ location.descriptions }}</label>
+                    </div>
+                {% endif %}
+            {% endfor %}
+        </div>
     </div>
-      {% for planner_table_date in planner_table_dates %}
-          <table class="droppable-table mb-5" data-date="{{ planner_table_date.date }}">
-              <thead>
-                  <tr>
-                      <th class="text-center" colspan="3">{{ planner_table_date.date  }}</th>
-                  </tr>
-                  <tr>
-                    <th class="planner-table-description">Description</th>
-                    <th class="planner-table-address">Address</th>
-                    <th class="planner-table-price">Price</th>
-                  </tr>
-              </thead>
-              <tbody>
-                  {% for planner_table_description in planner_table_date.planner_table_descriptions_set.all %}
-                      <tr style="background-color: {{planner_table_description.color_label}}; color: white;">
-                          <td class="planner-table-description">
-                            <i class="fas fa-{{planner_table_description.location_address.icon}}"></i> {{ planner_table_description.descriptions }}
-                          </td>
-                          <td class="planner-table-address">
-                              <i class="fas fa-map map-icon" data-address="{{ planner_table_description.location_address.address }}" style="cursor: pointer"> Click to copy</i>
-                          </td>
-                          <td class="planner-table-price">
-                              {{ planner_table_description.location_address.price|floatformat:"2" }}
-                          </td>
+    <div class="container mt-5">
+      <div class="row justify-content-center">
+        <div class="shadow p-4 rounded bg-view bg-second-color">
+          {% for planner_table_date in planner_table_dates %}
+              <table class="droppable-table mb-5 bg-navbar" data-date="{{ planner_table_date.date }}">
+                  <thead>
+                      <tr>
+                          <th class="text-center" colspan="3">{{ planner_table_date.date  }}</th>
                       </tr>
-                  {% endfor %}
-                    <tr>
-                      <td class="text-center" colspan="2">Total</td>
-                      <td id="total-price"></td>
-                    </tr>
-              </tbody>
-          </table>
-      {% endfor %}
+                      <tr>
+                        <th class="planner-table-description">Description</th>
+                        <th class="planner-table-address">Address</th>
+                        <th class="planner-table-price">Price</th>
+                      </tr>
+                  </thead>
+                  <tbody>
+                      {% for planner_table_description in planner_table_date.planner_table_descriptions_set.all %}
+                          <tr style="background-color: {{planner_table_description.color_label}}; color: white;">
+                              <td class="planner-table-description">
+                                <i class="fas fa-{{planner_table_description.location_address.icon}}"></i> {{ planner_table_description.descriptions }}
+                              </td>
+                              <td class="planner-table-address">
+                                  <i class="fas fa-map map-icon" data-address="{{ planner_table_description.location_address.address }}" style="cursor: pointer"> Click to copy</i>
+                              </td>
+                              <td class="planner-table-price">
+                                {% if planner_table_description.location_address.price > 0.0 %}
+                                  {{ planner_table_description.location_address.price|floatformat:"2" }}
+                                {% else %}
+                                  Free
+                                {% endif %}
+                              </td>
+                          </tr>
+                      {% endfor %}
+                        <tr>
+                          <td class="text-center" colspan="2">Total</td>
+                          <td id="total-price"></td>
+                        </tr>
+                  </tbody>
+              </table>
+          {% endfor %}
+          </div>
+      </div>
+    </div>
 </div>
 
 <script src="https://code.jquery.com/jquery-3.6.4.min.js"></script>
 <script src="https://code.jquery.com/ui/1.12.1/jquery-ui.min.js"></script>
+<script src="https://unpkg.com/sweetalert/dist/sweetalert.min.js"></script>
 <script>
   $(".droppable-table").each(function() {
       var total = 0;
@@ -83,6 +114,17 @@
   });
 </script>
 <script>
+    var SwalColors = {
+        warning: "rgba(177, 195, 45, 0.45)",
+        danger: "rgba(209, 36, 36, 0.45)",
+        success: "rgba(29, 210, 47, 0.45)"
+    };
+    
+    function SwalOverlayColor(color){
+        setTimeout(function(){
+            $(".swal-overlay").css({"background-color": color});
+        }, 10);
+    }
     $(function() {
      
       function getCookie(name) {
@@ -120,6 +162,7 @@
           var droppedLabel = ui.helper.data('label');
           var targetTable = $(this).data('date');
           var labelid = ui.helper.data('id');
+
   
           if ($(this).find("td:contains('" + droppedLabel + "')").length === 0) {
             var targetBody = $(this).find("tbody");
@@ -153,6 +196,7 @@
           setTimeout(function() {
             location.reload();
         }, 10);
+        
       }
       });
       // Click event for copying address on map icon click
@@ -163,8 +207,29 @@
         dummyInput.setAttribute('value', addressToCopy);
         dummyInput.select();
         document.execCommand('copy');
+        SwalOverlayColor(SwalColors["success"]);
+        swal({
+          title: "Copied address", 
+          text: addressToCopy,
+          icon: "success",
+          timer: 1500,
+          buttons: false,
+        })
         document.body.removeChild(dummyInput);
       });
     });
   </script>
+  <script>
+    document.addEventListener("DOMContentLoaded", function (event) {
+        var scrollpos = sessionStorage.getItem('scrollpos');
+        if (scrollpos) {
+            window.scrollTo(0, scrollpos);
+            sessionStorage.removeItem('scrollpos');
+        }
+    });
+
+    window.addEventListener("beforeunload", function (e) {
+        sessionStorage.setItem('scrollpos', window.scrollY);
+    });
+</script>
 {% endblock %}

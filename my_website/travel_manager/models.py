@@ -1,5 +1,6 @@
 from django.db import models
 from django.contrib.auth.models import User
+from django.core.validators import FileExtensionValidator
 from django_countries.fields import CountryField
 
 
@@ -9,7 +10,7 @@ from django_countries.fields import CountryField
 class Destinations(models.Model):
     user = models.ForeignKey(User, on_delete=models.CASCADE, related_name="destination", null=True)
     country = CountryField()
-    city = models.CharField(max_length=100)
+    city = models.CharField(max_length=128)
     latitude = models.FloatField()
     longitude = models.FloatField()
 
@@ -20,18 +21,18 @@ class Information(models.Model):
     
 class Tiktok(models.Model):
     destinations = models.ForeignKey(Destinations, on_delete=models.CASCADE)
-    link = models.CharField(max_length=200)
+    link = models.CharField(max_length=256)
 
 class Location_address(models.Model):
     destinations = models.ForeignKey(Destinations, on_delete=models.CASCADE)
-    address = models.CharField(max_length=255)
+    address = models.CharField(max_length=256)
     latitude = models.FloatField()
     longitude = models.FloatField()
-    icon = models.CharField(max_length=100, default="location-pin")
-    marker_color = models.CharField(max_length=50, default="red")
+    icon = models.CharField(max_length=128, default="location-pin")
+    marker_color = models.CharField(max_length=64, default="red")
     inside_planner = models.BooleanField(default=False)
-    descriptions = models.TextField()
-    price = models.FloatField()
+    descriptions = models.TextField(default='Attration')
+    price = models.FloatField(default=0)
 
 class Planner_Date(models.Model):
     destinations = models.ForeignKey(Destinations, on_delete=models.CASCADE)
@@ -50,5 +51,5 @@ class Planner_Table_Descriptions(models.Model):
 
 class Documents(models.Model):
     destinations = models.ForeignKey(Destinations, on_delete=models.CASCADE)
-    file = models.FileField(upload_to="Media/")
+    file = models.FileField(upload_to="Media/", validators=[FileExtensionValidator(allowed_extensions=["pdf"])])
     

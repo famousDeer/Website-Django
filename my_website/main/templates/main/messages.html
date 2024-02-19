@@ -1,17 +1,7 @@
 <script src="https://code.jquery.com/jquery-3.6.4.min.js"></script>
-<script>
-    $(document).ready(function() {
-        // Znajdź wszystkie elementy z klasą 'auto-hide' i ukryj po 5 sekundach
-        $('.auto-hide').delay(5000).fadeOut(400, function() {
-            // Opcjonalnie możesz również usuwać elementy z DOM po animacji
-            $(this).remove();
-        });
-    });
-</script>
+
 {% if messages %}
     {% for message in messages %}
-            <div class="text-center alert {{ message.tags }} alert-dismissible auto-hide" role="alert" >
-              {{ message }}
-            </div>
+            <div class="message"></div>
     {% endfor %}
 {% endif %}
