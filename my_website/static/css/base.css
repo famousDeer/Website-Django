@@ -1,35 +1,25 @@
-.sidenav {
-    height: 100%;
-    width: 160px;
-    position: fixed;
-    z-index: 1;
-    top: 0;
-    left: 0;
-    background-color: #111;
-    overflow-x: hidden;
-    padding-top: 20px;
+
+.navbar .nav-link:hover{
+    color: #EEEDEB;
 }
 
-.sidenav a {
-    padding: 6px 8px 6px 16px;
-    text-decoration: none;
-    font-size: 25px;
-    color: #818181;
-    display: block;
+.bg-navbar{
+    background-color: #E3CAA5;
 }
 
-.sidenav a:hover {
-    color: #f1f1f1
+.bg-base{
+    background-color: #FFFBE9;
 }
 
-
-.main {
-    margin-left: 160px;
-    padding: 0px, 10px;
+.bg-second-color{
+    background-color: #CEAB93;
 }
 
-.strike{
-    text-decoration: line-through;
-    text-decoration-color: #23c963;
-    text-decoration-thickness: 0.1em;
+.nav-link.logout{
+    font-size: 30px;
+}
+
+.dropdown-item:hover{
+    background-color: transparent;
+    color: #EEEDEB;
 }

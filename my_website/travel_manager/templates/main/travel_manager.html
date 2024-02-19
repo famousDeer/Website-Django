@@ -8,38 +8,83 @@
 <link rel="stylesheet" href="{% static 'flags/sprite.css' %}"> 
 
 <div class="d-flex justify-content-between align-items-center">
-    <a href="add-destination" class="btn btn-success">Add</a>
     <h3 class="text-center mx-auto">List of destinations</h3>
 </div>
 <hr class="mt-4 mb-4">
+<div class="container mt-5">
+    <div class="row justify-content-center">
+        <div class="shadow p-4 rounded bg-view bg-second-color">
+            <table class="w-100 text-center tabel table-bordered bg-navbar">
+                <thead>
+                    <tr>
+                        <th scope="col">Flag</th>
+                        <th scope="col">Country</th>
+                        <th scope="col">City</th>
+                        <th scope="col">Buttons</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    {% for destiny in user.destination.all %}
+                    <tr>
+                        <td>
+                            <img class="img-fit" src="{{destiny.country.flag}}" alt="{{destiny.country.name}}">
+                        </td>
+                        <td>
+                            <label>{{destiny.country.name|slice:":20"}}</label>
+                        </td>
+                        <td>
+                            <label>{{destiny.city}}</label>
+                        </td>
+                        <td>
+                            <a href="travel-manager/{{destiny.id}}" class="btn btn-success">Info</a>
+                            <a href="travel-manager/delete/{{destiny.id}}" class="btn btn-danger delete-btn">
+                                <i class="bi bi-trash3"></i> Delete
+                            </a>
+                        </td>
+                    </tr>
+                {% endfor %}
+                </tbody>
+            </tabel>
+        </div>
+    </div>
+</div>
+<script src="https://unpkg.com/sweetalert/dist/sweetalert.min.js"></script>
+<script>
+    var SwalColors = {
+        warning: "rgba(177, 195, 45, 0.45)",
+        danger: "rgba(209, 36, 36, 0.45)",
+        success: "rgba(29, 210, 47, 0.45)"
+    };
 
-<table class="w-100 text-center tabel table-bordered table table-hover">
-    <thead>
-        <tr>
-            <th scope="col">Flag</th>
-            <th scope="col">Country</th>
-            <th scope="col">City</th>
-            <th scope="col">Buttons</th>
-        </tr>
-    </thead>
-    <tbody>
-        {% for destiny in user.destination.all %}
-        <tr>
-            <td>
-                <img class="img-fit" src="{{destiny.country.flag}}" alt="{{destiny.country.name}}">
-            </td>
-            <td>
-                <label>{{destiny.country.name|slice:":20"}}</label>
-            </td>
-            <td>
-                <label>{{destiny.city}}</label>
-            </td>
-            <td>
-                <a href="travel-manager/{{destiny.id}}" class="btn btn-success">Info</a>
-                <a href="travel-manager/delete/{{destiny.id}}" class="btn btn-danger">Delete</a>
-            </td>
-        </tr>
-    {% endfor %}
-    </tbody>
-</tabel>
+    function SwalOverlayColor(color){
+        setTimeout(function(){
+            $(".swal-overlay").css({"background-color": color});
+        }, 10);
+    }
+    $(document).ready(function() {
+        // Nasłuchuj zdarzenia kliknięcia na przycisku z klasą 'delete-btn'
+        $('.delete-btn').on('click', function(event) {
+            // Zatrzymaj domyślne zachowanie przeglądarki dla linku
+            event.preventDefault();
+            // Pobierz adres URL z atrybutu 'href' przycisku
+            var deleteUrl = $(this).attr('href');
+            SwalOverlayColor(SwalColors["warning"]);
+            // Wyświetl komunikat swal przed wykonaniem żądania usuwania
+            swal({
+                title: "Are you sure?",
+                text: "Once deleted, you will not be able to recover this item!",
+                icon: "warning",
+                buttons: true,
+                dangerMode: true,
+            })
+            .then((willDelete) => {
+                // Jeśli użytkownik kliknie przycisk "OK" w komunikacie swal
+                if (willDelete) {
+                    // Wykonaj żądanie usuwania, przekierowując do adresu 'deleteUrl'
+                    window.location.href = deleteUrl;
+                }
+            });
+        });
+    });
+</script>
 {% endblock %}

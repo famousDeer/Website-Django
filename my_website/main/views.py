@@ -7,22 +7,6 @@ from .forms import CreateNewList
 
 # Create your views here.
 
-def create(request):
-    if request.method == "POST":
-        form = CreateNewList(request.POST)
-
-        if form.is_valid():
-            n = form.cleaned_data["name"]
-            t = ToDoList(name=n)
-            t.save()
-            request.user.todolist.add(t)
-        
-        return HttpResponseRedirect("/%i" %t.id)
-
-    else:
-        form = CreateNewList()
-    return render(request, "main/create.html", {"form":form})
-
 def delete(request, id):
     tdTable = ToDoList.objects.get(id=id)
     messages.info(request, f"Successfully deleted {tdTable.name}")
@@ -66,4 +50,16 @@ def todolist(request):
     return render(request, "main/todolist.html", {"ls":ls})
 
 def view(request):
-    return render(request, "main/view.html", {})
+    if request.method == "POST":
+        form = CreateNewList(request.POST)
+
+        if form.is_valid():
+            n = form.cleaned_data["name"]
+            t = ToDoList(name=n)
+            t.save()
+            request.user.todolist.add(t)
+        
+        return HttpResponseRedirect("/%i" %t.id)
+    else:
+        form = CreateNewList()
+    return render(request, "main/view.html", {"form":form})

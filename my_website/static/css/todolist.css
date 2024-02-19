@@ -106,3 +106,15 @@
   .color-label{
     color: #4a84dc;
   }
+
+.btn-list{
+  color: #FFFFFF;
+  background-color: #747264;
+  width: 90%;
+  position: relative;
+  left: 10%
+}
+
+.btn-list:hover{
+  background-color: #afab8e;
+}
