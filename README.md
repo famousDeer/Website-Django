@@ -52,9 +52,6 @@ Now you should go to server address which is `http://127.0.0.1:8000/`.
 
 # Future updates
 - **Travel-Manager**
-    - Add page to upload files (tickets, some other documents is PDF)
-    - Preview documents
-    - Add budget page where you can add how much did you spend money
     - Add feature in planner to manager time range on any attraction
     - Add feature to change order in planner tables
-    - Add tests
+    - Add tests (Working right now) :bulb:
