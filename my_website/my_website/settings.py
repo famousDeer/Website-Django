@@ -59,6 +59,7 @@ INSTALLED_APPS = [
     'embed_video',
     'bootstrap_datepicker_plus',
     'fontawesomefree',
+    'coverage',
 ]
 
 MIDDLEWARE = [

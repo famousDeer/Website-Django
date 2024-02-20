@@ -30,6 +30,10 @@
     font-size: 30px;
 }
 
+.nav-link.admin{
+    font-size: 30px;
+}
+
 .dropdown-item:hover{
     background-color: transparent;
     color: #EEEDEB;
