@@ -1,7 +1,7 @@
 from django import forms
 from django_countries.fields import CountryField
 from bootstrap_datepicker_plus.widgets import DatePickerInput
-from .models import Documents
+from .models import Documents, Budget
 
 class CreateNewDestination(forms.Form):
     country = CountryField(blank_label="Select Country").formfield(label="country")
@@ -36,3 +36,8 @@ class DocumentsForm(forms.ModelForm):
     class Meta:
         model = Documents
         fields = ['file']
+
+class BudgetForm(forms.ModelForm):
+    class Meta:
+        model = Budget
+        fields = ['description', 'price']

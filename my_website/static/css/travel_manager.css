@@ -224,3 +224,17 @@ textarea{
   position: sticky;
   top: 50%;
 }
+
+.bi-trash3:hover {
+  color: white !important;
+}
+
+.bi-trash3{
+  background: none;
+  border: none;
+  float:right;
+}
+
+.table.table-hover{
+  cursor: pointer;
+}

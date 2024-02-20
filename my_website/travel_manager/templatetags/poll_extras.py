@@ -21,3 +21,16 @@ def basename(value):
         value (string): URL of file
     """
     return os.path.basename(value)
+
+@register.filter(name="sum")
+def sum(values, field_name):
+    """Sum all value in field
+
+    Args:
+        value (float): Value from field
+        field_name (string): Name of filed from table
+    """
+    total = 0
+    for value in values:
+        total += getattr(value, field_name)
+    return total

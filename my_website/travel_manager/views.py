@@ -8,8 +8,8 @@ from django.http import FileResponse
 from datetime import timedelta
 from datetime import datetime
 
-from .models import Destinations, Tiktok, Information, Location_address, Planner_Date, Planner_Table_Date, Planner_Table_Descriptions, Documents
-from .forms import CreateNewDestination, DateForm, DocumentsForm
+from .models import Destinations, Tiktok, Information, Location_address, Planner_Date, Planner_Table_Date, Planner_Table_Descriptions, Documents, Budget
+from .forms import CreateNewDestination, DateForm, DocumentsForm, BudgetForm
 from .utils.utils import find_location_coordinates, different_days_in_db, get_cleared_url
 
 
@@ -300,7 +300,24 @@ class BudgetView(View):
     view_name = "budget"
 
     def get(self, request, id):
-        return render(request, self.template_name)
+        form = BudgetForm()
+        budget = Budget.objects.filter(destinations_id=id).all()
+        return render(request, self.template_name, {"form": form, "budgets": budget})
 
     def post(self, request, id):
-        pass
+        destination = Destinations.objects.get(id=id)
+        form = BudgetForm(request.POST)
+        delete_id = request.POST.get("delete")
+
+        if form.is_valid():
+            budget = form.save(commit=False)
+            budget.destinations = destination
+            budget.save()
+            return redirect(reverse(self.view_name, args=[id]))
+        
+        elif delete_id:
+            tiktok = Budget.objects.get(id=delete_id)
+            tiktok.delete()
+            return redirect(reverse(self.view_name, args=[id]))
+
+        return render(request, self.template_name, {"form": form, "budgets": budget})

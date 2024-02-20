@@ -15,7 +15,18 @@
     background-color: #CEAB93;
 }
 
+.bg-third-color{
+    background-color: #AD8B73;
+}
 .nav-link.logout{
+    font-size: 30px;
+}
+
+.nav-link.login{
+    font-size: 30px;
+}
+
+.nav-link.register{
     font-size: 30px;
 }
 

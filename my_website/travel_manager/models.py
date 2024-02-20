@@ -52,4 +52,8 @@ class Planner_Table_Descriptions(models.Model):
 class Documents(models.Model):
     destinations = models.ForeignKey(Destinations, on_delete=models.CASCADE)
     file = models.FileField(upload_to="Media/", validators=[FileExtensionValidator(allowed_extensions=["pdf"])])
-    
+
+class Budget(models.Model):
+    destinations = models.ForeignKey(Destinations, on_delete=models.CASCADE)
+    description = models.CharField(max_length=512, default="")
+    price = models.FloatField(default=0)
