@@ -1,7 +1,11 @@
 <script src="https://code.jquery.com/jquery-3.6.4.min.js"></script>
 
+{% block messege %}
+
 {% if messages %}
     {% for message in messages %}
-            <div class="message"></div>
+            <div class="message" id="message.tag"></div>
     {% endfor %}
 {% endif %}
+
+{% endblock %}
