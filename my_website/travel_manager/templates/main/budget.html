@@ -53,7 +53,8 @@
                                 {{budget.price}}
                                 <form method="post" action="#">
                                     {% csrf_token %}
-                                    <button type="submit" name="delete" value="{{ budget.id }}" class="bi bi-trash3 delete-btn" style="color:red;"></button>
+                                    <input type="hidden" name="delete_id" value="{{ budget.id }}">
+                                    <button type="button" class="bi bi-trash3 delete-btn" style="color:red;"></button>
                                 </form>
                             </div>
                         </td>
@@ -86,8 +87,11 @@
         $('.delete-btn').on('click', function(event) {
             // Zatrzymaj domyślne zachowanie przeglądarki dla linku
             event.preventDefault();
-            // Pobierz adres URL z atrybutu 'href' przycisku
-            var deleteUrl = $(this).attr('href');
+            // Zapisz referencję do formularza zawierającego przycisk, który został kliknięty
+            var form = $(this).closest('form');
+            // Pobierz wartość przycisku usuwania (ID budżetu)
+            var deleteId = $(this).closest('form').find('input[name="delete_id"]').val();
+            // Ustaw kolor overlay
             SwalOverlayColor(SwalColors["warning"]);
             // Wyświetl komunikat swal przed wykonaniem żądania usuwania
             swal({
@@ -96,12 +100,13 @@
                 icon: "warning",
                 buttons: true,
                 dangerMode: true,
-            })
-            .then((willDelete) => {
+            }).then((willDelete) => {
                 // Jeśli użytkownik kliknie przycisk "OK" w komunikacie swal
                 if (willDelete) {
-                    // Wykonaj żądanie usuwania, przekierowując do adresu 'deleteUrl'
-                    window.location.href = deleteUrl;
+                    // Ustaw wartość pola ukrytego na ID budżetu
+                    form.find('input[name="delete_id"]').val(deleteId);
+                    // Przeslij formularz
+                    form.submit();
                 }
             });
         });

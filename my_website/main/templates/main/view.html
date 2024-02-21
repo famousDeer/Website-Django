@@ -14,13 +14,14 @@ View
                 <h3 class="text-center">Your Lists</h3>
                 <form method="post" action="#" class="form-group">
                     {% csrf_token %}
+                    <input type="hidden" id="delete_id" name="delete_id" value="">
                     <div class="input-group mb-3">
                         <div class="input-group-prepend">
                             <button type="submit", name="save" class="btn btn-success me-2">Create New</button>
                         </div>
                         {{form.name}}
                     </div>
-                </form>
+                
                 <hr class="mt-4 mb-4">
                 {% for td in user.todolist.all %}
                     <div class="mb-3 row">
@@ -28,12 +29,13 @@ View
                             <a href="/{{td.id}}" class="btn btn-list">{{td.name}}</a>
                         </div>
                         <div class="col">
-                        <a href="delete/{{td.id}}" class="btn btn-danger delete-btn">
+                        <button type="button" data-id="{{td.id}}" class="btn btn-danger delete-btn">
                             <i class="bi bi-trash3"></i> Delete
-                        </a>
+                        </button>
                         </div>
                     </div>
                 {% endfor %}
+            </form>
             </div>
         </div>
     </div>
@@ -56,8 +58,7 @@ View
         $('.delete-btn').on('click', function(event) {
             // Zatrzymaj domyślne zachowanie przeglądarki dla linku
             event.preventDefault();
-            // Pobierz adres URL z atrybutu 'href' przycisku
-            var deleteUrl = $(this).attr('href');
+            var deleteId = $(this).data('id');
             SwalOverlayColor(SwalColors["warning"]);
             // Wyświetl komunikat swal przed wykonaniem żądania usuwania
             swal({
@@ -70,8 +71,11 @@ View
             .then((willDelete) => {
                 // Jeśli użytkownik kliknie przycisk "OK" w komunikacie swal
                 if (willDelete) {
-                    // Wykonaj żądanie usuwania, przekierowując do adresu 'deleteUrl'
-                    window.location.href = deleteUrl;
+                    // Ustaw identyfikator w ukrytym polu formularza
+                    $('#delete_id').val(deleteId);
+    
+                    // Wyślij formularz
+                    $('form').submit();
                 }
             });
         });

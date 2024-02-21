@@ -307,17 +307,15 @@ class BudgetView(View):
     def post(self, request, id):
         destination = Destinations.objects.get(id=id)
         form = BudgetForm(request.POST)
-        delete_id = request.POST.get("delete")
+        delete_id = request.POST.get("delete_id")
 
         if form.is_valid():
             budget = form.save(commit=False)
             budget.destinations = destination
             budget.save()
-            return redirect(reverse(self.view_name, args=[id]))
         
         elif delete_id:
-            tiktok = Budget.objects.get(id=delete_id)
-            tiktok.delete()
-            return redirect(reverse(self.view_name, args=[id]))
-
-        return render(request, self.template_name, {"form": form, "budgets": budget})
+            budget = Budget.objects.get(id=delete_id)
+            budget.delete()
+        
+        return redirect(reverse(self.view_name, args=[id]))

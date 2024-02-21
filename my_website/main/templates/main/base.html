@@ -23,7 +23,7 @@
                     <button class="navbar-toggler ms-auto" type="button" data-bs-toggle="collapse" data-bs-target="#navbarSupportedContent" aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
                         <span class="navbar-toggler-icon"></span>
                     </button>
-                    <a class="navbar-brand ms-3" aria-current="page" href="/home" id="home-button"><i class="bi bi-house-fill" id="home-icon"></i> Home</a>
+                    <a class="navbar-brand ms-3" aria-current="page" href="{% url 'home' %}" id="home-button"><i class="bi bi-house-fill" id="home-icon"></i> Home</a>
                     <a class="navbar-brand">Hello {{user.username}}</a>
                 </div>
                 <div class="collapse navbar-collapse" id="navbarSupportedContent">
