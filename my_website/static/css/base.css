@@ -1,8 +1,4 @@
 
-.navbar .nav-link:hover{
-    color: #EEEDEB;
-}
-
 .bg-navbar{
     background-color: #E3CAA5;
 }
@@ -18,23 +14,36 @@
 .bg-third-color{
     background-color: #AD8B73;
 }
+
+.dropdown-menu{
+    border: none;
+}
+
+.navbar .nav-link:hover{
+    color: #EEEDEB;
+}
+
 .nav-link.logout{
-    font-size: 30px;
+    font-size: 1.25rem;
 }
 
 .nav-link.login{
-    font-size: 30px;
+    font-size: 1.25rem;
 }
 
 .nav-link.register{
-    font-size: 30px;
+    font-size: 1.25rem;
 }
 
 .nav-link.admin{
-    font-size: 30px;
+    font-size: 1.25rem;
 }
 
 .dropdown-item:hover{
     background-color: transparent;
     color: #EEEDEB;
+}
+
+.home-button:hover{
+    color: #FFFBE9;
 }
