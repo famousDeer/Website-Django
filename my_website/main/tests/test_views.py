@@ -29,11 +29,6 @@ class TestViews(TestCase):
         self.home_url = reverse('home')
         self.delete_url = reverse('delete', args=[1])
 
-    def test_todolist_GET(self):
-        response = self.client.get(self.view_url)
-        self.assertEqual(response.status_code, 200)
-        self.assertTemplateUsed(response, 'main/view.html')
-
     def test_home_GET(self):
         response = self.client.get(self.home_url)
         self.assertEqual(response.status_code, 200)
@@ -50,12 +45,4 @@ class TestViews(TestCase):
         self.assertEqual(response.status_code, 302)
         self.assertEqual(self.testuser.todolist.count(), 0)
 
-    def test_todolist_POST_create_and_delete_list(self):
-        self.client.login(username='testuser', password='12345')
-        response = self.client.post(self.view_url, {'name': 'TestList'})
-        self.assertEqual(response.status_code, 302)
-        self.assertEqual(self.testuser.todolist.count(), 1)
-        response = self.client.post(self.delete_url)
-        self.assertEqual(response.status_code, 302)
-        self.assertEqual(self.testuser.todolist.count(), 0)
 

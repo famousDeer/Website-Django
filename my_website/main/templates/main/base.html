@@ -12,9 +12,9 @@
         <link href="{% static 'fontawesomefree/css/brands.css' %}" rel="stylesheet" type="text/css">
         <link href="{% static 'fontawesomefree/css/solid.css' %}" rel="stylesheet" type="text/css">
         <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.min.css">
+        <link href="https://cdn.jsdelivr.net/npm/sweetalert2@11.10.5/dist/sweetalert2.min.css" rel="stylesheet">
         <link rel="stylesheet" href="{% static 'css/base.css' %}">
         <link rel="shortcut icon" href="{%  static 'images/favicon32.png' %}">
-
         <script src="https://code.jquery.com/jquery-3.6.0.min.js" integrity="sha256-/xUj+3OJU5yExlq6GSYGSHk7tPXikynS7ogEvDej/m4=" crossorigin="anonymous"></script>
         
         <title>{% block title %}David's Stie{% endblock %}</title>
@@ -36,14 +36,14 @@
                         <li class="nav-item dropdown">
                             <a class="nav-link dropdown-toggle"  href="#" role="button" id="navbarDropdown" data-bs-toggle="dropdown" aria-expanded="false">Travel Manager</a>
                             <ul class="dropdown-menu bg-navbar" aria-labelledby="navbarDropdown">
-                                <li><a class="dropdown-item" href="/travel-manager/add-destination">Add destination</a></li>
-                                <li><a class="dropdown-item" href="/travel-manager">List of destinations</a></li>
+                                <li><a class="dropdown-item" href="{%url 'add-destination' %}">Add destination</a></li>
+                                <li><a class="dropdown-item" href="{%url 'travel-manager' %}">List of destinations</a></li>
                             </ul>
                         </li>
                         <li class="nav-item dropdown">
                             <a class="nav-link dropdown-toggle" href="#" role="button" id="navbarDropdown" data-bs-toggle="dropdown" aria-expanded="false">ToDoList</a>
                             <ul class="dropdown-menu bg-navbar" aria-labelledby="navbarDropdown">
-                                <li><a class="dropdown-item" href="/view">View Lists</a></li>
+                                <li><a class="dropdown-item" href="{%url 'view' %}">View Lists</a></li>
                             </ul>
                         </li>
                     {% if user.is_superuser %}
@@ -53,8 +53,8 @@
                     </ul>
                 </div>
                 {% else %}
-                    <a class="nav-link me-3 login" href="/login">Login</a>
-                    <a class="nav-link register" href="/register">Register</a>
+                    <a class="nav-link me-3 login" href="{%url 'login' %}">Login</a>
+                    <a class="nav-link register" href="{%url 'register' %}">Register</a>
                 {% endif %}
             </div>                
         </nav>
@@ -76,9 +76,9 @@
         </div>
         <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js" integrity="sha384-C6RzsynM9kWDrMNeT87bh95OGNyZPhcTNXj1NW7RuBCsyN/o0jlpcV8Qyq46cDfL" crossorigin="anonymous"></script>
         <script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.11.8/dist/umd/popper.min.js" integrity="sha384-I7E8VVD/ismYTF4hNIPjVp/Zjvgyol6VFvRkX/vR+Vc4jQkC+hVqc2pM8ODewa9r" crossorigin="anonymous"></script>
+        <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11.10.5/dist/sweetalert2.all.min.js"></script>
         {% comment %} <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.min.js" integrity="sha384-BBtl+eGJRgqQAUMxJ7pMwbEyER4l1g+O15P+16Ep7Q9Q+zqX6gSbd85u4mG4QzX+" crossorigin="anonymous"></script> {% endcomment %}
         {% comment %} <script src="https://unpkg.com/sweetalert/dist/sweetalert.min.js"></script> {% endcomment %}
-        <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
         {% load sweetify %}
         {% sweetify %}
     </body>

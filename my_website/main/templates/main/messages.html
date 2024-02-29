@@ -1,11 +1,13 @@
+{% block messege %}
+
 <script src="https://code.jquery.com/jquery-3.6.4.min.js"></script>
 
-{% block messege %}
 
 {% if messages %}
     {% for message in messages %}
-            <div class="message" id="message.tag"></div>
+            <div class="message" id="message.tag" value="messege"></div>
     {% endfor %}
 {% endif %}
 
+<script src="{% static 'js/messeges_pop_up.js' %}"></script>
 {% endblock %}

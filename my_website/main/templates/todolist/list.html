@@ -6,17 +6,17 @@
 {% block content %}
 <link rel="stylesheet" href="{% static 'css/todolist.css' %}">  
 
-    <h1 class="text-center">{{ls.name}}</h1>
+    <h1 class="text-center">{{list.name}}</h1>
     <hr class="mt-4 mb-4">
     <form method="post" action="#">
         {% csrf_token %}
-        {% for item in ls.item_set.all %}
+        {% for item in items %}
             <div class="form-control-list input-group mb-3">
                 {% if item.complete == True %}
-                <input type="checkbox" value="clicked" name="c{{item.id}}" id="checkbox{{item.id}}" checked>
+                <input type="checkbox" value="completed" name="c{{item.id}}" id="checkbox{{item.id}}" checked>
                 <label class="form-control finished">{{item.text}}</label>
                 {% else %}
-                <input type="checkbox" value="clicked" name="c{{item.id}}" id="checkbox{{item.id}}">
+                <input type="checkbox" value="completed" name="c{{item.id}}" id="checkbox{{item.id}}">
                 <label class="form-control">{{item.text}}</label>
                 {% endif %}                
 

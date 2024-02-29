@@ -23,13 +23,13 @@ View
                     </div>
                 
                 <hr class="mt-4 mb-4">
-                {% for td in user.todolist.all %}
+                {% for list in user_lists %}
                     <div class="mb-3 row">
                         <div class="col">
-                            <a href="/{{td.id}}" class="btn btn-list">{{td.name}}</a>
+                            <a href="/{{list.id}}" class="btn btn-list">{{list.name}}</a>
                         </div>
                         <div class="col">
-                        <button type="button" data-id="{{td.id}}" class="btn btn-danger delete-btn">
+                        <button type="button" data-id="{{list.id}}" class="btn btn-danger delete-btn">
                             <i class="bi bi-trash3"></i> Delete
                         </button>
                         </div>
@@ -40,7 +40,6 @@ View
         </div>
     </div>
 </div>
-<script src="https://unpkg.com/sweetalert/dist/sweetalert.min.js"></script>
 <script>
     var SwalColors = {
         warning: "rgba(177, 195, 45, 0.45)",
@@ -61,16 +60,19 @@ View
             var deleteId = $(this).data('id');
             SwalOverlayColor(SwalColors["warning"]);
             // Wyświetl komunikat swal przed wykonaniem żądania usuwania
-            swal({
+            Swal.fire({
                 title: "Are you sure?",
                 text: "Once deleted, you will not be able to recover this item!",
                 icon: "warning",
-                buttons: true,
+                showCancelButton: true,
+                confirmButtonColor: "#3085d6",
+                cancelButtonColor: "#d33",
+                confirmButtonText: "Delete it",
                 dangerMode: true,
-            })
-            .then((willDelete) => {
+                backdrop: "rgba(199, 212, 21, 0.4)",
+            }).then((result) => {
                 // Jeśli użytkownik kliknie przycisk "OK" w komunikacie swal
-                if (willDelete) {
+                if (result.isConfirmed) {
                     // Ustaw identyfikator w ukrytym polu formularza
                     $('#delete_id').val(deleteId);
     
