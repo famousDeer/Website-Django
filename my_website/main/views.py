@@ -11,9 +11,11 @@ class ToDoListView(View):
     message = Message()
     
     def get(self, request):
-        form = CreateNewList()
-        user_lists = request.user.todolist.all()
-        return render(request, self.template_name, {"form": form, "user_lists": user_lists})
+        context = {
+            "form": CreateNewList(),
+            "user_lists": request.user.todolist.all(),
+        }
+        return render(request, self.template_name, context)
     
     def post(self, request):
         form = CreateNewList(request.POST)
