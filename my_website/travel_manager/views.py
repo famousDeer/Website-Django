@@ -1,4 +1,5 @@
 import folium
+import json
 
 from django.shortcuts import render, redirect
 from django.contrib import messages
@@ -11,6 +12,7 @@ from datetime import datetime
 from .models import Destinations, Tiktok, Information, Location_address, Planner_Date, Planner_Table_Date, Planner_Table_Descriptions, Documents, Budget
 from .forms import CreateNewDestination, DateForm, DocumentsForm, BudgetForm
 from .utils.utils import find_location_coordinates, different_days_in_db, get_cleared_url
+from utils.messages import Message
 
 
 # Creating class views
@@ -23,6 +25,23 @@ class AddAddressPoint(View):
                  "Parks": ["tree", "green"],
                  "Restaurant": ["burger", "red"],
                  "Shops": ["shop", "purple"]}
+    message = Message()
+
+    def __wrong_object_type(self, object_type):
+        objects_list = ["Attraction", "Museum", "Parks", "Restaurant", "Shops"]
+        return object_type not in objects_list
+            
+    def __empty_address_field(self, address):
+        return not address
+            
+    def __not_found_address(self, loc_coordinates):
+        return loc_coordinates is None
+    
+    def __submitted_price(self, price):
+        return price
+    
+    def __submitted_description(self, description):
+        return description
 
     def get(self, request, id):
         destination = Destinations.objects.get(id=id)
@@ -32,17 +51,17 @@ class AddAddressPoint(View):
         destination = Destinations.objects.get(id=id)
         submitted_address = request.POST.get("add_address")
         object_type = request.POST.get("object_type")
-        address_description = request.POST.get("address_description")
+        description = request.POST.get("address_description")
         price = request.POST.get("price")
 
-        if not submitted_address:
-            messages.error(request, "You need to write an address")
-        elif object_type == "Choose object type":
-            messages.error(request, "You need to choose object type")
+        if self.__empty_address_field(submitted_address):
+            self.message.error(request, "You need to write an address")
+        elif self.__wrong_object_type(object_type):
+            self.message.error(request, "You need to choose object type")
         else:
             loc_coordinates = find_location_coordinates(submitted_address)
-            if loc_coordinates is None:
-                messages.error(request, "Wrong address")
+            if self.__not_found_address(loc_coordinates):
+                self.message.error(request, "Wrong address")
             else:
                 location_address = Location_address.objects.create(destinations=destination,
                                                                    address=loc_coordinates['address'],
@@ -51,18 +70,21 @@ class AddAddressPoint(View):
                                                                    icon=self.icons[object_type][0],
                                                                    marker_color=self.icons[object_type][1],
                                                                    descriptions=object_type)
-        if price != '':
-            location_address.price = price
-        
-        if address_description != '':
-            location_address.descriptions = address_description
-        
-        location_address.save()
+                if self.__submitted_price(price):
+                    location_address.price = price
+
+                if self.__submitted_description(description):
+                    location_address.descriptions = description
+                location_address.save()
                 
         return redirect(reverse(self.view_name, args=[destination.id]))
 
 class AddDescription(View):
     view_name = "info-destination"
+    message = Message()
+
+    def __information_table_exist(self, table):
+        return table is not None
 
     def get(self, request, id):
         destination = Destinations.objects.get(id=id)
@@ -73,14 +95,12 @@ class AddDescription(View):
         information = Information.objects.filter(destinations=destination).first()
         description = request.POST.get(f"descriptions{id}")
 
-        if information is not None:
+        if self.__information_table_exist(information):
             information.description = description
             information.save()
+            self.message.success(request, "Saved successfully")
             return redirect(reverse(self.view_name, args=[destination.id]))
         else:
-            localization = find_location_coordinates(f"{destination.city, destination.country.name}")
-            latitude = localization["latitude"]
-            longitude = localization["longitude"]
             information = Information.objects.create(destinations=destination, 
                                                      fly_cost=0.0, 
                                                      description=description,)
@@ -100,16 +120,12 @@ class AddDestination(View):
         if form.is_valid():
             country_code = form.cleaned_data["country"]
             city = form.cleaned_data["city"]
-            tiktok = form.cleaned_data["tiktok"]
             coordinates = find_location_coordinates({"city":city, "country_code": country_code}, featuretype="city")
 
             destination = Destinations(country=country_code,
                                        city=city,
                                        latitude=coordinates["latitude"],
                                        longitude=coordinates["longitude"])
-            if tiktok != '':
-                tiktok = Tiktok(destinations=destination, link=tiktok)
-                tiktok.save()
 
             destination.save()
             request.user.destination.add(destination)
@@ -118,11 +134,12 @@ class AddDestination(View):
     
 class DeleteDestination(View):
     temple_name = "travel-manager"
+    message = Message()
 
     def get(self, request, id):
         destination = Destinations.objects.get(id=id)
-        messages.info(request, f"Successfully deleted {destination.country.name} | {destination.city}")
         destination.delete()
+        self.message.success(request, f"Successfully deleted {destination.country.name} | {destination.city}")
         return redirect(reverse(self.temple_name))
 
 class InfoDestination(View):
@@ -132,10 +149,7 @@ class InfoDestination(View):
         destination = Destinations.objects.get(id=id) 
         information = Information.objects.filter(destinations=destination).first()
         location_address = Location_address.objects.filter(destinations=destination).all()
-        interactive_map = folium.Map(location=[destination.latitude, destination.longitude], zoom_start=14)
-        # folium.Marker((destination.latitude, destination.longitude),
-        #               icon=folium.Icon(color='blue', prefix='fa')
-        #               ).add_to(interactive_map)
+        interactive_map = folium.Map(location=[destination.latitude, destination.longitude], zoom_start=14, scrollWheelZoom=False)
         if location_address is not None:
             for location in location_address:
                 folium.Marker((location.latitude, location.longitude),
@@ -236,6 +250,7 @@ class PlannerView(View):
 class TikTokView(View):
     template_name = "main/tiktok.html"
     view_name = "tiktok"
+    message = Message()
 
     def get(self, request, id):
         destination = Destinations.objects.get(id=id)
@@ -248,7 +263,7 @@ class TikTokView(View):
         if request.POST.get("newItem"):
             text = get_cleared_url(request.POST.get("new"))
             if len(text.split("/")[-1]) < 19:
-                messages.error(request, "Wrong address, clear box and look at example")
+                self.message.error(request, "Wrong address, clear box and look at example")
             else:
                 tiktok = Tiktok.objects.create(destinations=destination,
                                                link=text)
