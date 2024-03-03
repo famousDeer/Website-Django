@@ -53,13 +53,13 @@ INSTALLED_APPS = [
     'crispy_bootstrap4',
     'main.apps.MainConfig',
     'register.apps.RegisterConfig',
-    'tictactoe.apps.TictactoeConfig',
     'travel_manager.apps.TravelManagerConfig',
     'django_countries',
     'embed_video',
     'bootstrap_datepicker_plus',
     'fontawesomefree',
     'coverage',
+    'sweetify',
 ]
 
 MIDDLEWARE = [
@@ -96,13 +96,23 @@ WSGI_APPLICATION = 'my_website.wsgi.application'
 # Database
 # https://docs.djangoproject.com/en/5.0/ref/settings/#databases
 
+# DATABASES = {
+#     'default': {
+#         'ENGINE': 'django.db.backends.sqlite3',
+#         'NAME': BASE_DIR / 'db.sqlite3',
+#     }
+# }
+
 DATABASES = {
     'default': {
-        'ENGINE': 'django.db.backends.sqlite3',
-        'NAME': BASE_DIR / 'db.sqlite3',
+        'ENGINE': 'django.db.backends.postgresql_psycopg2',
+        'NAME': 'db',
+        'USER': 'postgres',
+        'PASSWORD': 'password',
+        'HOST': 'ip',
+        'PORT': 'port',
     }
 }
-
 
 # Password validation
 # https://docs.djangoproject.com/en/5.0/ref/settings/#auth-password-validators
@@ -157,4 +167,4 @@ CRISPY_TEMPLATE_PACK = "bootstrap4"
 LOGIN_REDIRECT_URL = "/home"
 LOGOUT_REDIRECT_URL = "/home"
 
-# Embeded video config
+SWEETIFY_SWEETALERT_LIBRARY = 'sweetalert2'
