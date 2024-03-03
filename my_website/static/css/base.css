@@ -47,3 +47,17 @@
 .home-button:hover{
     color: #FFFBE9;
 }
+
+.back-page{
+    font-size:3em; 
+    color:#CEAB93;
+    position: sticky;
+    top: 0.5rem;
+    margin-left: 2rem;
+    margin-right: -4rem;
+}
+
+.back-page:hover{
+    color: #f5ccb2;
+    cursor: pointer;
+}
