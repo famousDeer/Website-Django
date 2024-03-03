@@ -58,14 +58,23 @@
                 {% endif %}
             </div>                
         </nav>
-
-        <div id="content", name="content", class="mt-3 container">
-            <div class="row justify-content-center">
-                <div class="col-12">
-                    {% block content %}
-                    {% endblock %}
-                    {% block map %}
-                    {% endblock %}
+        <div class="d-flex flex-row">
+            <div class="mt-2">
+                {% block back %}
+                {% endblock %}
+            </div>
+            <div class="mt-5">
+                {% block planner_labels %}
+                {% endblock %}
+            </div>
+            <div id="content", name="content", class="mt-3 container">
+                <div class="row justify-content-center">
+                    <div class="col-12">
+                        {% block content %}
+                        {% endblock %}
+                        {% block map %}
+                        {% endblock %}
+                    </div>
                 </div>
             </div>
         </div>

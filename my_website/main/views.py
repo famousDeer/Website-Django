@@ -1,5 +1,9 @@
+import folium
+
 from django.shortcuts import render, redirect
 from django.views import View
+from django.contrib.auth import get_user_model
+from django.contrib.auth.models import User
 
 from .models import ToDoList
 from .forms import CreateNewList
@@ -43,7 +47,22 @@ class HomeView(View):
     template_name = "main/home.html"
 
     def get(self, request):
-        return render(request, self.template_name)
+        user = request.user
+        if user.is_authenticated:
+            destinations = user.destination.all()
+            interactive_map = folium.Map(location=[0,0], zoom_start=2)
+            if destinations is not None:
+                for destination in destinations:
+                    folium.Marker((destination.latitude, destination.longitude),
+                                  popup=destination.country.name + "\n" + destination.city,
+                                  icon=folium.Icon()
+                                  ).add_to(interactive_map)
+            context = {
+                "map": interactive_map._repr_html_
+            }
+        else:
+            context = {}
+        return render(request, self.template_name, context)
     
 def index(request, id):
     message = Message()
