@@ -13,4 +13,5 @@ urlpatterns = [
     path('travel-manager/documents/<int:id>', views.DocumentsView.as_view(), name='documents'),
     path('travel-manager/budget/<int:id>', views.BudgetView.as_view(), name='budget'),
     path('travel-manager/documents/open-file/<int:id>/', views.DocumentsView.as_view(), name='open-file'),
+    path('travel-manager/back-page', views.back_page, name='back-page'),
 ]

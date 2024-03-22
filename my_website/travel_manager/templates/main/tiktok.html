@@ -4,6 +4,10 @@
 
 {% block title %}Tiktok sources{% endblock %} 
 
+{% block back %}
+<a class="bi bi-arrow-left-circle-fill back-page" href="{% url 'back-page' %}"></a>
+{% endblock %}
+
 {% block content%}
 <link rel="stylesheet" href="{% static 'css/travel_manager.css' %}" />
 <link rel="stylesheet" href="{% static 'flags/sprite.css' %}" />

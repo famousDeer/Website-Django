@@ -37,9 +37,9 @@
                         </td>
                         <td>
                             <a href="travel-manager/{{destiny.id}}" class="btn btn-success">Info</a>
-                            <a href="travel-manager/delete/{{destiny.id}}" class="btn btn-danger delete-btn">
+                            <button data-id={{destiny.id}} href="travel-manager/delete/{{destiny.id}}" class="btn btn-danger delete-btn">
                                 <i class="bi bi-trash3"></i> Delete
-                            </a>
+                            </button>
                         </td>
                     </tr>
                 {% endfor %}
@@ -65,22 +65,23 @@
         $('.delete-btn').on('click', function(event) {
             // Zatrzymaj domyślne zachowanie przeglądarki dla linku
             event.preventDefault();
-            // Pobierz adres URL z atrybutu 'href' przycisku
-            var deleteUrl = $(this).attr('href');
+            var deleteId = $(this).data('id');
             SwalOverlayColor(SwalColors["warning"]);
             // Wyświetl komunikat swal przed wykonaniem żądania usuwania
-            swal({
+            Swal.fire({
                 title: "Are you sure?",
                 text: "Once deleted, you will not be able to recover this item!",
                 icon: "warning",
-                buttons: true,
+                showCancelButton: true,
+                confirmButtonColor: "#3085d6",
+                cancelButtonColor: "#d33",
+                confirmButtonText: "Delete it",
                 dangerMode: true,
-            })
-            .then((willDelete) => {
+                backdrop: "rgba(199, 212, 21, 0.4)",
+            }).then((result) => {
                 // Jeśli użytkownik kliknie przycisk "OK" w komunikacie swal
-                if (willDelete) {
-                    // Wykonaj żądanie usuwania, przekierowując do adresu 'deleteUrl'
-                    window.location.href = deleteUrl;
+                if (result.isConfirmed) {
+                    window.location.href = $(this).attr('href');
                 }
             });
         });
