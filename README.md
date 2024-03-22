@@ -4,16 +4,21 @@ It's my first website made with Django framework. It contain simple ToDoList (ma
 
 - **Travel-Manager** this app is for people who's wanna manage travel by them. App contain map where you can add address, with information about price. You can also add descriptions. As you know many videos on TikTok shows some pro tips, so you can add TikTok link to your manager and watch them whenever you want. When you have address of your points you can make a planner. In planner you can drag your place and drop in table with date when you will go.
 
+# Demo
+Address: 18.171.229.171:8000 \
+Login: test \
+Password: r^@11@2@W4KJyy2h
+
 # Environment
-In `requrements.txt` you can find out all libs you need to run this project. Just simply create env:
+In `requirements.txt` you can find out all libs you need to run this project. Just simply create env:
 ```bash
-> python3 -m venv .django_website
-> source .django_website/bin/activate
-> pip install -r requrements.txt
+python3 -m venv .django_website &
+source .django_website/bin/activate &
+pip install -r requirements.txt
 ```
 Or install packages:
 ```bash
-> pip install -r requirements.txt
+pip install -r requirements.txt
 ```
 
 # Run project
@@ -36,9 +41,9 @@ To run project you need to be in `My_website/my_website`. Your dirs should looks
 If you are in correct dir use this command:
 
 ```bash
-> python3 manage.py makemigrations
-> python3 manage.py migrate
-> python3 manage.py runserver
+python3 manage.py makemigrations
+python3 manage.py migrate
+python3 manage.py runserver
 ```
 When everything is ok you should see this message:
 ```
