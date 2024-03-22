@@ -4,31 +4,9 @@
 
 {% block title %}Tiktok sources{% endblock %} 
 
-{% block back %}
-<a class="bi bi-arrow-left-circle-fill back-page" href="{% url 'back-page' %}"></a>
-{% endblock %}
-
-{% block planner_labels %}
-  <div class="container sticky-labels">
-    <div class="shadow p-4 rounded bg-second-color text-center">
-      <div>Drag & Drop</div>
-      <div id="label-container" class="d-flex flex-column">
-        {% for location in locations %}
-            {% if location.inside_planner == False %}
-                <div class="form-group row draggable-item" data-id="{{ location.id }}" data-label="{{ location.descriptions }}" style="background-color: {{ location.marker_color }}">
-                    <label class="drag-label" style="col background-color: {{ location.marker_color }}; color: white;"><i class="bi bi-list"></i> {{ location.descriptions }}</label>
-                </div>
-            {% endif %}
-        {% endfor %}
-      </div>
-    </div>
-  </div>
-{% endblock %}
 {% block content%}
 <link rel="stylesheet" href="{% static 'css/travel_manager.css' %}">   
 <link rel="stylesheet" href="https://code.jquery.com/ui/1.12.1/themes/base/jquery-ui.css">
-<script src="https://code.jquery.com/jquery-3.6.4.min.js"></script>
-
 
 <div class="d-flex justify-content-between align-items-center">
     <h3 class="text-center mx-auto">{{destinations.country.name}} | {{destinations.city}}</h3>
@@ -60,7 +38,7 @@
             {% endif %}
         {% endfor %}
     </div> {% endcomment %}
-    {% comment %} <div class="mt-5 sticky-labels">
+    <div class="mt-5 sticky-labels">
           <div id="label-container">
             {% for location in locations %}
                 {% if location.inside_planner == False %}
@@ -70,10 +48,10 @@
                 {% endif %}
             {% endfor %}
         </div>
-    </div> {% endcomment %}
+    </div>
     <div class="container mt-5">
       <div class="row justify-content-center">
-        <div class="shadow p-4 rounded bg-second-color">
+        <div class="shadow p-4 rounded bg-view bg-second-color">
           {% for planner_table_date in planner_table_dates %}
               <table class="droppable-table mb-5 bg-navbar" data-date="{{ planner_table_date.date }}">
                   <thead>
@@ -93,7 +71,7 @@
                                 <i class="fas fa-{{planner_table_description.location_address.icon}}"></i> {{ planner_table_description.descriptions }}
                               </td>
                               <td class="planner-table-address">
-                                  <i class="bi bi-clipboard2-fill map-icon" data-address="{{ planner_table_description.location_address.address }}" style="cursor: pointer"> Click to copy</i>
+                                  <i class="fas fa-map map-icon" data-address="{{ planner_table_description.location_address.address }}" style="cursor: pointer"> Click to copy</i>
                               </td>
                               <td class="planner-table-price">
                                 {% if planner_table_description.location_address.price > 0.0 %}
@@ -116,6 +94,7 @@
     </div>
 </div>
 
+<script src="https://code.jquery.com/jquery-3.6.4.min.js"></script>
 <script src="https://code.jquery.com/ui/1.12.1/jquery-ui.min.js"></script>
 <script src="https://unpkg.com/sweetalert/dist/sweetalert.min.js"></script>
 <script>
@@ -216,7 +195,7 @@
 
           setTimeout(function() {
             location.reload();
-        }, 50);
+        }, 10);
         
       }
       });
@@ -229,7 +208,7 @@
         dummyInput.select();
         document.execCommand('copy');
         SwalOverlayColor(SwalColors["success"]);
-        Swal.fire({
+        swal({
           title: "Copied address", 
           text: addressToCopy,
           icon: "success",
@@ -253,11 +232,4 @@
         sessionStorage.setItem('scrollpos', window.scrollY);
     });
 </script>
-<script>
-  $(document).ready(function() {
-    if ($("#label-container").children().length === 0) {
-      $(".container.sticky-labels").hide();
-    }
-  });
-  </script>
 {% endblock %}

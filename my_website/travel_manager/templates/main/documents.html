@@ -4,121 +4,41 @@
 
 {% block title %}Documents{% endblock %} 
 
-{% block back %}
-<a class="bi bi-arrow-left-circle-fill back-page" href="{% url 'back-page' %}"></a>
-{% endblock %}
-
 {% block content%}
 <link rel="stylesheet" href="{% static 'css/travel_manager.css' %}">   
 
 <form method="post" enctype="multipart/form-data">
     {% csrf_token %}
-    <div class="container mt-5">
-        <div class="row justify-content-center">
-            <div class="col-md-7">
-                <div class="shadow p-4 rounded bg-add-destination bg-second-color">
-                    <div class="form-group row">
-                        <label class="col-form-label col-3 text-start">File</label>
-                        <div class="col mt-2">
-                        {{ form.file }}
-                        </div>
-                    </div>
-                    <div class="form-group row">
-                        <label class="col-form-label col-3 text-start">Description</label>
-                        <div class="col mt-1">
-                            {{ form.description }}
-                        </div>
-                    </div>
-                    <button type="submit" class="btn btn-primary mb-3 save" name="save">Upload <i class="fa-solid fa-paper-plane"></i></button>
-                </div>
-            </div>
-        </div>
-    </div>
+    {{ form.as_p }}
+    <button type="submit" class="btn btn-primary mb-3" name="save">Upload <i class="fa-solid fa-paper-plane"></i></button>
 </form>
-{% if documents %}
-    <div class="container mt-5">
-        <div class="row justify-content-center">
-            <div class="shadow p-4 rounded bg-second-color">
-                <table class="w-100 text-center table table-bordered" id="documents-table">
-                    <thead>
-                        <tr>
-                            <th scope="col">File</th>
-                            <th scope="col">Description</th>
-                            <th scope="col">Button</th>
-                        </tr>
-                    </thead>
-                    <tbody>
-                        {% for document in documents%}
-                        <tr class="document-row" data-url="{% url 'open-file' document.id %}">
-                            <td>{{document.file.name|basename}}</td>
-                            <td>{{document.description}}</td>
-                            <td>
-                                <div class="d-inline-flex">
-                                    <form method="post" action="#">
-                                        {% csrf_token %}
-                                        <button type="button" class="bi bi-file-earmark-pdf-fill open-btn" style="color:green;"></button>
-                                        <input type="hidden" name="delete_id" value="{{ document.id }}">
-                                        <button type="button" class="bi bi-trash3 delete-btn" style="color:red;"></button>
-                                    </form>
-                                </div>
-                            </td>
-                        </tr>
-                        {% endfor %}
-                    </tbody>
-                </table>
-            </div>
-        </div>
-    </div>
-{% endif %}
 
+<table class="w-100 text-center table table-bordered table table-hover" id="documents-table">
+    <thead>
+        <tr>
+            <th scope="col">File</th>
+        </tr>
+    </thead>
+    <tbody>
+        {% for document in documents%}
+        <tr class="document-row" data-url="{% url 'open-file' document.id %}">
+            <td>{{document.file.name|basename}}</td>
+        </tr>
+        {% endfor %}
+    </tbody>
+</table>
 <script>
-    $('.open-btn').on('click', function(event) {
-        event.preventDefault();
-        var url = $(this).closest('tr').data('url');
-        window.location.href = url;
-    });
-
-    var SwalColors = {
-        warning: "rgba(177, 195, 45, 0.45)",
-        danger: "rgba(209, 36, 36, 0.45)",
-        success: "rgba(29, 210, 47, 0.45)"
-    };
-
-    function SwalOverlayColor(color){
-        setTimeout(function(){
-            $(".swal-overlay").css({"background-color": color});
-        }, 10);
-    }
-    $(document).ready(function() {
-        // Nasłuchuj zdarzenia kliknięcia na przycisku z klasą 'delete-btn'
-        $('.delete-btn').on('click', function(event) {
-            // Zatrzymaj domyślne zachowanie przeglądarki dla linku
-            event.preventDefault();
-            // Zapisz referencję do formularza zawierającego przycisk, który został kliknięty
-            var form = $(this).closest('form');
-            // Pobierz wartość przycisku usuwania (ID budżetu)
-            var deleteId = $(this).closest('form').find('input[name="delete_id"]').val();
-            // Ustaw kolor overlay
-            SwalOverlayColor(SwalColors["warning"]);
-            // Wyświetl komunikat swal przed wykonaniem żądania usuwania
-            Swal.fire({
-                title: "Are you sure?",
-                text: "Once deleted, you will not be able to recover this item!",
-                icon: "warning",
-                showCancelButton: true,
-                confirmButtonColor: "#3085d6",
-                cancelButtonColor: "#d33",
-                confirmButtonText: "Delete it",
-                dangerMode: true,
-                backdrop: "rgba(199, 212, 21, 0.4)",
-            }).then((willDelete) => {
-                // Jeśli użytkownik kliknie przycisk "OK" w komunikacie swal
-                if (willDelete.isConfirmed) {
-                    // Ustaw wartość pola ukrytego na ID budżetu
-                    form.find('input[name="delete_id"]').val(deleteId);
-                    // Przeslij formularz
-                    form.submit();
-                }
+    document.addEventListener("DOMContentLoaded", function() {
+        // Znajdź wszystkie wiersze z klasą "document-row"
+        var rows = document.querySelectorAll(".document-row");
+        
+        // Dla każdego wiersza dodaj obsługę kliknięcia
+        rows.forEach(function(row) {
+            row.addEventListener("click", function() {
+                // Pobierz URL do przekierowania z atrybutu "data-url" wiersza
+                var url = this.getAttribute("data-url");
+                // Przekieruj użytkownika do określonego URL
+                window.location.href = url;
             });
         });
     });

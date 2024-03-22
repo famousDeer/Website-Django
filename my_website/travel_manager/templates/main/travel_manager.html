@@ -37,9 +37,9 @@
                         </td>
                         <td>
                             <a href="travel-manager/{{destiny.id}}" class="btn btn-success">Info</a>
-                            <button data-id={{destiny.id}} href="travel-manager/delete/{{destiny.id}}" class="btn btn-danger delete-btn">
+                            <a href="travel-manager/delete/{{destiny.id}}" class="btn btn-danger delete-btn">
                                 <i class="bi bi-trash3"></i> Delete
-                            </button>
+                            </a>
                         </td>
                     </tr>
                 {% endfor %}
@@ -65,23 +65,22 @@
         $('.delete-btn').on('click', function(event) {
             // Zatrzymaj domyślne zachowanie przeglądarki dla linku
             event.preventDefault();
-            var deleteId = $(this).data('id');
+            // Pobierz adres URL z atrybutu 'href' przycisku
+            var deleteUrl = $(this).attr('href');
             SwalOverlayColor(SwalColors["warning"]);
             // Wyświetl komunikat swal przed wykonaniem żądania usuwania
-            Swal.fire({
+            swal({
                 title: "Are you sure?",
                 text: "Once deleted, you will not be able to recover this item!",
                 icon: "warning",
-                showCancelButton: true,
-                confirmButtonColor: "#3085d6",
-                cancelButtonColor: "#d33",
-                confirmButtonText: "Delete it",
+                buttons: true,
                 dangerMode: true,
-                backdrop: "rgba(199, 212, 21, 0.4)",
-            }).then((result) => {
+            })
+            .then((willDelete) => {
                 // Jeśli użytkownik kliknie przycisk "OK" w komunikacie swal
-                if (result.isConfirmed) {
-                    window.location.href = $(this).attr('href');
+                if (willDelete) {
+                    // Wykonaj żądanie usuwania, przekierowując do adresu 'deleteUrl'
+                    window.location.href = deleteUrl;
                 }
             });
         });

@@ -107,7 +107,6 @@ class AddDescription(View):
         return redirect(reverse(self.view_name, args=[destination.id]))
      
 class AddDestination(View):
-    #TODO City finder, find new library
     template_name = "main/add_destination.html"
     view_name = "travel-manager"
 
@@ -158,12 +157,7 @@ class InfoDestination(View):
                               icon=folium.Icon(color=location.marker_color, icon=location.icon, prefix='fa')
                               ).add_to(interactive_map)
 
-        context = {
-            "destinations": destination,
-            "information": information,
-            "map": interactive_map._repr_html_
-        }
-        return render(request, self.temple_name, context)
+        return render(request, self.temple_name, {"destinations":destination, "information": information, "map": interactive_map._repr_html_})
 
 class PlannerView(View):
     template_name = 'main/planner.html'
@@ -173,14 +167,14 @@ class PlannerView(View):
               "rgb(255, 0, 0)":"#bc2c2c",
               "rgb(128, 0, 128)":"#9d32d6"}
 
-    def __get_info_from_db(self, id):
+    def get_info_from_db(self, id):
         destination_db = Destinations.objects.get(id=id)
         location_address = Location_address.objects.filter(destinations=destination_db).all()
         planner_date = Planner_Date.objects.filter(destinations=destination_db).first()
         
         return destination_db, location_address, planner_date
     
-    def __get_initial_date(self, planner_date):
+    def get_initial_date(self, planner_date):
         initial_data = {}
         if planner_date:
             initial_data["start_date"] = planner_date.start_date
@@ -191,7 +185,7 @@ class PlannerView(View):
 
         return initial_data, planner_table_date
     
-    def __create_date_range(self, planner_date):
+    def create_date_range(self, planner_date):
         time_difference = planner_date.end_date - planner_date.start_date
         for i in range(time_difference.days + 1):
             Planner_Table_Date.objects.create(planner_date=planner_date,
@@ -200,20 +194,18 @@ class PlannerView(View):
         return Planner_Table_Date.objects.filter(planner_date_id=planner_date.id).all()
 
     def get(self, request, id):
-        destination_db, location_address, planner_date = self.__get_info_from_db(id)
-        initial_data, planner_table_date = self.__get_initial_date(planner_date)
+        destination_db, location_address, planner_date = self.get_info_from_db(id)
+        initial_data, planner_table_date = self.get_initial_date(planner_date)
         form = DateForm(initial=initial_data)
 
-        context = {
-            "destinations": destination_db,
-            "form": form,
-            "planner_table_dates": planner_table_date,
-            "locations": location_address}
-        return render(request, self.template_name, context)
+        return render(request, self.template_name, {"destinations": destination_db,
+                                                    "form": form,
+                                                    "planner_table_dates": planner_table_date,
+                                                    "locations": location_address})
 
     def post(self, request, id):
-        destination_db, location_address, planner_date = self.__get_info_from_db(id)
-        initial_data, planner_table_date = self.__get_initial_date(planner_date)
+        destination_db, location_address, planner_date = self.get_info_from_db(id)
+        initial_data, planner_table_date = self.get_initial_date(planner_date)
         form = DateForm(request.POST, initial=initial_data)
 
         if form.is_valid():
@@ -226,12 +218,12 @@ class PlannerView(View):
                     planner_date.end_date = form.cleaned_data["end_date"]
                     planner_date.save()
                     Planner_Table_Date.objects.filter(planner_date=planner_date).delete() # Clear table from any data
-                    planner_table_date = self.__create_date_range(planner_date)
+                    planner_table_date = self.create_date_range(planner_date)
             else:
                 planner_date = Planner_Date.objects.create(destinations=destination_db,
                                                            start_date=form.cleaned_data["start_date"],
                                                            end_date=form.cleaned_data["end_date"])
-                planner_table_date = self.__create_date_range(planner_date)
+                planner_table_date = self.create_date_range(planner_date)
 
         else:
             table_date = request.POST.get('table_header')
@@ -249,14 +241,11 @@ class PlannerView(View):
                                                                                   descriptions=request.POST.get('text'),
                                                                                   color_label=self.colors[request.POST.get('color')])
             planner_table_date = Planner_Table_Date.objects.filter(planner_date_id=planner_date.id).all()
-        
-        context = {
-            "destinations": destination_db,
-            "form": form,
-            "planner_table_dates": planner_table_date,
-            "locations": location_address}
-        
-        return render(request, self.template_name, context)
+
+        return render(request, self.template_name, {"destinations": destination_db,
+                                                    "form": form,
+                                                    "planner_table_dates": planner_table_date,
+                                                    "locations": location_address})
 
 class TikTokView(View):
     template_name = "main/tiktok.html"
@@ -296,7 +285,6 @@ class TravelManagerView(View):
 class DocumentsView(View):
     template_name = "main/documents.html"
     view_name = "documents"
-    message = Message()
 
     def get(self, request, id):
         form = DocumentsForm()
@@ -309,17 +297,11 @@ class DocumentsView(View):
     def post(self, request, id):
         destination = Destinations.objects.get(id=id)
         form = DocumentsForm(request.POST, request.FILES)
-        delete_id = request.POST.get("delete_id")
 
         if form.is_valid():
             documents = form.save(commit=False)
             documents.destinations = destination
             documents.save()
-            return redirect(reverse(self.view_name, args=[id]))
-        elif delete_id:
-            budget = Documents.objects.get(id=delete_id)
-            budget.delete()
-            self.message.success(request, f"Successfully deleted '{budget.description}'")
             return redirect(reverse(self.view_name, args=[id]))
     
         return render(request, self.template_name, {'form': form})
@@ -331,7 +313,6 @@ class DocumentsView(View):
 class BudgetView(View):
     template_name = "main/budget.html"
     view_name = "budget"
-    message = Message()
 
     def get(self, request, id):
         form = BudgetForm()
@@ -351,11 +332,5 @@ class BudgetView(View):
         elif delete_id:
             budget = Budget.objects.get(id=delete_id)
             budget.delete()
-            self.message.success(request, f"Successfully deleted '{budget.description}'")
         
         return redirect(reverse(self.view_name, args=[id]))
-    
-def back_page(request):
-    view_name = 'info-destination'
-    id = request.META['HTTP_REFERER'][-1]
-    return redirect(reverse(view_name, args=[id]))

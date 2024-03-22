@@ -52,7 +52,6 @@ class Planner_Table_Descriptions(models.Model):
 class Documents(models.Model):
     destinations = models.ForeignKey(Destinations, on_delete=models.CASCADE)
     file = models.FileField(upload_to="Media/", validators=[FileExtensionValidator(allowed_extensions=["pdf"])])
-    description = models.TextField()
 
 class Budget(models.Model):
     destinations = models.ForeignKey(Destinations, on_delete=models.CASCADE)

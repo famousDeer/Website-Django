@@ -4,12 +4,8 @@
 
 {% block title %}Budget{% endblock %} 
 
-{% block back %}
-<a class="bi bi-arrow-left-circle-fill back-page" href="{% url 'back-page' %}"></a>
-{% endblock %}
-
 {% block content%}
-<link rel="stylesheet" href="{% static 'css/travel_manager.css' %}">  
+<link rel="stylesheet" href="{% static 'css/travel_manager.css' %}">   
 
 <form method="post" enctype="multipart/formdata">
     {% csrf_token %}
@@ -18,13 +14,13 @@
             <div class="col-md-7">
                 <div class="shadow p-4 rounded bg-add-destination bg-second-color">
                     <div class="form-group row">
-                        <label class="col-form-label col-3 text-start">Description</label>
+                        <label for="country" class="col-form-label col-3 text-start">Description</label>
                         <div class="col mt-2">
                             {{ form.description }}
                         </div>
                     </div>
                     <div class="form-group row">
-                        <label class="col-form-label col-3 text-start">Price</label>
+                        <label for="city" class="col-form-label col-3 text-start">Price</label>
                         <div class="col mt-1">
                             {{ form.price }}
                         </div>
@@ -40,7 +36,7 @@
 {% if budgets %}
 <div class="container mt-5">
     <div class="row justify-content-center">
-        <div class="shadow p-4 rounded bg-second-color">
+        <div class="shadow p-4 rounded bg-view bg-second-color">
             <table class="w-100 text-center tabel table-bordered bg-navbar">
                 <thead>
                     <tr>
@@ -98,19 +94,15 @@
             // Ustaw kolor overlay
             SwalOverlayColor(SwalColors["warning"]);
             // Wyświetl komunikat swal przed wykonaniem żądania usuwania
-            Swal.fire({
+            swal({
                 title: "Are you sure?",
                 text: "Once deleted, you will not be able to recover this item!",
                 icon: "warning",
-                showCancelButton: true,
-                confirmButtonColor: "#3085d6",
-                cancelButtonColor: "#d33",
-                confirmButtonText: "Delete it",
+                buttons: true,
                 dangerMode: true,
-                backdrop: "rgba(199, 212, 21, 0.4)",
             }).then((willDelete) => {
                 // Jeśli użytkownik kliknie przycisk "OK" w komunikacie swal
-                if (willDelete.isConfirmed) {
+                if (willDelete) {
                     // Ustaw wartość pola ukrytego na ID budżetu
                     form.find('input[name="delete_id"]').val(deleteId);
                     // Przeslij formularz
