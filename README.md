@@ -50,6 +50,10 @@ Quit the server with CONTROL-C.
 ```
 Now you should go to server address which is `http://127.0.0.1:8000/`.
 
+# Database model
+Travel manager DB
+![Travel-manager-DB](img/travel_manager_DB.png)
+
 # Future updates
 - **Travel-Manager**
     - Add feature in planner to manager time range on any attraction
