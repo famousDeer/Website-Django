@@ -34,7 +34,7 @@ class AddAddressPoint(View):
     def __empty_address_field(self, address):
         return not address
             
-    def __address_not_found(self, loc_coordinates):
+    def __not_found_address(self, loc_coordinates):
         return loc_coordinates is None
     
     def __submitted_price(self, price):
@@ -60,7 +60,7 @@ class AddAddressPoint(View):
             self.message.error(request, "You need to choose object type")
         else:
             loc_coordinates = find_location_coordinates(submitted_address)
-            if self.__address_not_found(loc_coordinates):
+            if self.__not_found_address(loc_coordinates):
                 self.message.error(request, "Wrong address")
             else:
                 location_address = Location_address.objects.create(destinations=destination,
