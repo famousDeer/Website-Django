@@ -44,8 +44,7 @@
 }
 
 .img-fit{
-    width: 20%;
-    height: 20%;
+  size-adjust: auto;
 }
 
 label.form{
@@ -55,6 +54,8 @@ label.form{
 
 .btn-socials{
     float: right;
+    margin-right: 10px;
+    margin-bottom: 10px;
 }
 
 textarea{
@@ -212,7 +213,18 @@ textarea{
 .bi-trash3{
   background: none;
   border: none;
+  color: red;
   float:right;
+}
+
+.bi-info-circle-fill{
+  background: none;
+  border: none;
+  color: rgb(10, 134, 201);
+}
+
+.bi-info-circle-fill:hover{
+  color: white;
 }
 
 .bi-file-earmark-pdf-fill{
@@ -241,3 +253,22 @@ textarea{
 .bootstrap-datetimepicker-widget{
   margin-left: 5rem !important;
 }
+
+@media (min-width: 768px) {
+  .container {
+    justify-content: center; /* Center items when they are wrapped */
+  }
+}
+
+@media (min-width: 992px) {
+  .btn-socials {
+    margin-right: 20px; /* Increase right margin for larger screens */
+  }
+}
+
+@media (min-width: 1200px) {
+  .container {
+    justify-content: flex-start; /* Reset justify-content for larger screens */
+  }
+}
+

@@ -15,9 +15,9 @@ View
                 <form method="post" action="#" class="form-group">
                     {% csrf_token %}
                     <input type="hidden" id="delete_id" name="delete_id" value="">
-                    <div class="input-group mb-3">
+                    <div class="input-group mb-3 d-fles justify-content-center">
                         <div class="input-group-prepend">
-                            <button type="submit", name="save" class="btn btn-success me-2">Create New</button>
+                            <button type="submit", name="save" class="bi-plus-square-fill"></button>
                         </div>
                         {{form.name}}
                     </div>
