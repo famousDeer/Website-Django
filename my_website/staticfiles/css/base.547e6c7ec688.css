@@ -1,0 +1,69 @@
+
+.bg-navbar{
+    background-color: #E3CAA5;
+}
+
+.bg-base{
+    background-color: #FFFBE9;
+}
+
+.bg-second-color{
+    background-color: #CEAB93;
+}
+
+.bg-third-color{
+    background-color: #AD8B73;
+}
+
+.dropdown-menu{
+    border: none;
+}
+
+.navbar .nav-link:hover{
+    color: #EEEDEB;
+}
+
+.nav-link.logout{
+    font-size: 1.25rem;
+}
+
+.nav-link.login{
+    font-size: 1.25rem;
+}
+
+.nav-link.register{
+    font-size: 1.25rem;
+}
+
+.nav-link.admin{
+    font-size: 1.25rem;
+}
+
+.dropdown-item:hover{
+    background-color: transparent;
+    color: #EEEDEB;
+}
+
+.home-button:hover{
+    color: #FFFBE9;
+}
+
+.back-page{
+    font-size:3em; 
+    color:#CEAB93;
+    position: sticky;
+    top: 0.5rem;
+    margin-left: 2rem;
+    margin-right: -4rem;
+}
+
+.back-page:hover{
+    color: #f5ccb2;
+    cursor: pointer;
+}
+
+@media only screen and (max-width: 768px){
+    .mobile{
+        display: none;
+    }
+}
