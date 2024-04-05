@@ -6,3 +6,4 @@ env/
 Media/
 .coverage
 migrations/
+staticfiles/
