@@ -25,4 +25,5 @@ urlpatterns = [
     path('', include("django.contrib.auth.urls")),
     path('', include("register.urls")),
     path('', include("travel_manager.urls")),
+    path('', include("board_games.urls")),
 ]

@@ -54,6 +54,7 @@ INSTALLED_APPS = [
     'main.apps.MainConfig',
     'register.apps.RegisterConfig',
     'travel_manager.apps.TravelManagerConfig',
+    'board_games.apps.BoardGamesConfig',
     'django_countries',
     'embed_video',
     'bootstrap_datepicker_plus',
