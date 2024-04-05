@@ -31,7 +31,7 @@ class Location_address(models.Model):
     icon = models.CharField(max_length=128, default="location-pin")
     marker_color = models.CharField(max_length=64, default="red")
     inside_planner = models.BooleanField(default=False)
-    descriptions = models.TextField(default='Attration')
+    descriptions = models.TextField(default='Attraction')
     price = models.FloatField(default=0)
 
 class Planner_Date(models.Model):
