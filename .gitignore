@@ -5,3 +5,5 @@ test.py
 env/
 Media/
 .coverage
+board_games/
+migrations/
