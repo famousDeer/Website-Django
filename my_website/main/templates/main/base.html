@@ -55,6 +55,23 @@
                         </li>
                     </ul>
                     <ul class="navbar-nav">
+                        <li class="nav-item dropdown">
+                            <a class="nav-link dropdown-toggle" href="#" role="button" data-bs-toggle="dropdown" aria-expanded="false">Board Games</a>
+                            <ul class="dropdown-menu bg-navbar">
+                                <li><a class="dropdown-item bi-list-ul" href="{%url 'board-games' %}"> View Lists</a></li> <!--PLACEHOLDER-->
+                            </ul>
+                        </li>
+                    </ul>
+                    <ul class="navbar-nav">
+                        <li class="nav-item dropdown">
+                            <a class="nav-link dropdown-toggle" href="#" role="button" data-bs-toggle="dropdown" aria-expanded="false">Home budget</a>
+                            <ul class="dropdown-menu bg-navbar">
+                                <li><a class="dropdown-item bi-lightbulb" href="#"> Electricity</a></li> <!--PLACEHOLDER-->
+                                <li><a class="dropdown-item bi-droplet" href="#"> Water</a></li> <!--PLACEHOLDER-->
+                            </ul>
+                        </li>
+                    </ul>
+                    <ul class="navbar-nav">
                         {% if user.is_superuser %}
                         <li class="nav-item"><a class="nav-link active admin" href="/admin">Admin panel</a></li>
                         {% endif %}
