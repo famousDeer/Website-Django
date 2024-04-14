@@ -1,10 +1,9 @@
+.bg-base{
+    background-color: #FFFBE9;
+}
 
 .bg-navbar{
     background-color: #E3CAA5;
-}
-
-.bg-base{
-    background-color: #FFFBE9;
 }
 
 .bg-second-color{
@@ -15,8 +14,8 @@
     background-color: #AD8B73;
 }
 
-.dropdown-menu{
-    border: none;
+.dropdown-toggle{
+    margin-top: 2px;
 }
 
 .navbar .nav-link:hover{

@@ -64,7 +64,7 @@ textarea{
 
 .btn-socials {
   align-items: center;
-  background-color: #fee6e3;
+  background-color: #E3CAA5;
   border-radius: 8px;
   box-sizing: border-box;
   color: #111;
@@ -132,12 +132,6 @@ textarea{
 
 .btn.btn-primary:hover .fa-paper-plane{
   animation: sending-file 1s infinite ease;
-}
-
-@media (min-width: 768px) {
-  .btn-socials {
-    padding: 0 40px;
-  }
 }
 
 .drag-label{

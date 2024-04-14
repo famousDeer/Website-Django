@@ -24,61 +24,63 @@
             <div class="container-fluid">
                 <div class="d-flex align-items-center">
                     {% if user.is_authenticated %}
-                    <button class="navbar-toggler d-lg-none" type="button" data-bs-toggle="collapse" data-bs-target="#navbarSupportedContent" aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
+                    <button class="navbar-toggler d-lg-none" type="button" data-bs-toggle="offcanvas" data-bs-target="#offcanvasNavbar" aria-controls="offcanvasNavbar" aria-expanded="false" aria-label="Toggle navigation">
                         <span class="bi bi-list"></span>
                     </button>
                     <a class="navbar-brand ms-3 home-button" aria-current="page" href="{% url 'home' %}" id="home-button"><i class="bi bi-house-fill" id="home-icon"></i> Home</a>
                     <a class="navbar-brand d-lg-block">Hello {{user.username}}</a>
                 </div>
-                <div class="collapse navbar-collapse" id="navbarSupportedContent">
-                    <ul class="navbar-nav">
-                        <li class="nav-item dropdown">
-                            <a class="nav-link dropdown-toggle" href="#" role="button" data-bs-toggle="dropdown" aria-expanded="false">Travel Manager</a>
-                            <ul class="dropdown-menu bg-navbar">
-                                <li><a class="dropdown-item bi-house-add-fill" href="{%url 'add-destination' %}"> Add destination</a></li>
-                                <li><a class="dropdown-item bi-list-ul" href="{%url 'travel-manager' %}"> List of destinations</a></li>
-                                {% if 'travel-manager' in request.resolver_match.route and request.resolver_match.kwargs.id %}
-                                <li><a class="dropdown-item bi-tiktok" href="{%url 'tiktok' id=request.resolver_match.kwargs.id %}"> TikTok</a></li>
-                                <li><a class="dropdown-item bi-calendar3" href="{%url 'planner' id=request.resolver_match.kwargs.id %}"> Planner</a></li>
-                                <li><a class="dropdown-item bi-file-earmark-fill" href="{%url 'documents' id=request.resolver_match.kwargs.id %}"> Documents</a></li>
-                                <li><a class="dropdown-item bi-currency-dollar" href="{%url 'budget' id=request.resolver_match.kwargs.id %}"> Budget</a></li>
-                                {% endif %}
-                            </ul>
-                        </li>
-                    </ul>
-                    <ul class="navbar-nav">
-                        <li class="nav-item dropdown">
-                            <a class="nav-link dropdown-toggle" href="#" role="button" data-bs-toggle="dropdown" aria-expanded="false">ToDoList</a>
-                            <ul class="dropdown-menu bg-navbar">
-                                <li><a class="dropdown-item bi-list-ul" href="{%url 'view' %}"> View Lists</a></li>
-                            </ul>
-                        </li>
-                    </ul>
-                    <ul class="navbar-nav">
-                        <li class="nav-item dropdown">
-                            <a class="nav-link dropdown-toggle" href="#" role="button" data-bs-toggle="dropdown" aria-expanded="false">Board Games</a>
-                            <ul class="dropdown-menu bg-navbar">
-                                <li><a class="dropdown-item bi-list-ul" href="{%url 'board-games' %}"> View Lists</a></li> <!--PLACEHOLDER-->
-                            </ul>
-                        </li>
-                    </ul>
-                    <ul class="navbar-nav">
-                        <li class="nav-item dropdown">
-                            <a class="nav-link dropdown-toggle" href="#" role="button" data-bs-toggle="dropdown" aria-expanded="false">Home budget</a>
-                            <ul class="dropdown-menu bg-navbar">
-                                <li><a class="dropdown-item bi-lightbulb" href="#"> Electricity</a></li> <!--PLACEHOLDER-->
-                                <li><a class="dropdown-item bi-droplet" href="#"> Water</a></li> <!--PLACEHOLDER-->
-                            </ul>
-                        </li>
-                    </ul>
-                    <ul class="navbar-nav">
-                        {% if user.is_superuser %}
-                        <li class="nav-item"><a class="nav-link active admin" href="/admin">Admin panel</a></li>
-                        {% endif %}
-                    </ul>
-                    <ul class="navbar-nav">
-                        <li class="nav-item"><a class="nav-link active logout" href="{%url 'logout' %}">Logout</a></li>
-                    </ul>
+                <div class="offcanvas offcanvas-start bg-navbar" tabindex="-1" id="offcanvasNavbar" aria-labelledby="offcanvasNavbarLabel">
+                    <div class="offcanvas-header">
+                      <h5 class="offcanvas-title" id="offcanvasNavbarLabel">Menu</h5>
+                      <button type="button" class="btn-close" data-bs-dismiss="offcanvas" aria-label="Close"></button>
+                    </div>
+                    <div class="offcanvas-body">
+                        <ul class="navbar-nav">
+                            <li class="nav-item dropdown">
+                                <a class="nav-link dropdown-toggle" href="#" role="button" data-bs-toggle="dropdown" aria-expanded="false">Travel Manager</a>
+                                <ul class="dropdown-menu bg-navbar">
+                                    <li><a class="dropdown-item bi-house-add-fill" href="{%url 'add-destination' %}"> Add destination</a></li>
+                                    <li><hr class="dropdown-divider"></li>
+                                    <li><a class="dropdown-item bi-list-ul" href="{%url 'travel-manager' %}"> List of destinations</a></li>
+                                    {% if 'travel-manager' in request.resolver_match.route and request.resolver_match.kwargs.id %}
+                                    <li><hr class="dropdown-divider"></li>
+                                    <li><a class="dropdown-item bi-tiktok" href="{%url 'tiktok' id=request.resolver_match.kwargs.id %}"> TikTok</a></li>
+                                    <li><hr class="dropdown-divider"></li>
+                                    <li><a class="dropdown-item bi-calendar3" href="{%url 'planner' id=request.resolver_match.kwargs.id %}"> Planner</a></li>
+                                    <li><hr class="dropdown-divider"></li>
+                                    <li><a class="dropdown-item bi-file-earmark-fill" href="{%url 'documents' id=request.resolver_match.kwargs.id %}"> Documents</a></li>
+                                    <li><hr class="dropdown-divider"></li>
+                                    <li><a class="dropdown-item bi-currency-dollar" href="{%url 'budget' id=request.resolver_match.kwargs.id %}"> Budget</a></li>
+                                    {% endif %}
+                                </ul>
+                            </li>
+                        </ul>
+                        <ul class="navbar-nav">
+                            <li class="nav-item dropdown">
+                                <a class="nav-link dropdown-toggle" href="#" role="button" data-bs-toggle="dropdown" aria-expanded="false">ToDoList</a>
+                                <ul class="dropdown-menu bg-navbar">
+                                    <li><a class="dropdown-item bi-list-ul" href="{%url 'view' %}"> View Lists</a></li>
+                                </ul>
+                            </li>
+                        </ul>
+                        <ul class="navbar-nav">
+                            <li class="nav-item dropdown">
+                                <a class="nav-link dropdown-toggle" href="#" role="button" data-bs-toggle="dropdown" aria-expanded="false">Board Games</a>
+                                <ul class="dropdown-menu bg-navbar">
+                                    <li><a class="dropdown-item bi-list-ul" href="{%url 'board-games' %}"> View Lists</a></li> <!--PLACEHOLDER-->
+                                </ul>
+                            </li>
+                        </ul>
+                        <ul class="navbar-nav">
+                            {% if user.is_superuser %}
+                            <li class="nav-item"><a class="nav-link active admin" href="/admin">Admin panel</a></li>
+                            {% endif %}
+                        </ul>
+                        <ul class="navbar-nav">
+                            <li class="nav-item"><a class="nav-link active logout" href="{%url 'logout' %}">Logout</a></li>
+                        </ul>
+                    </div>
                 </div>
                     {% else %}
                     <div class="d-flex">
