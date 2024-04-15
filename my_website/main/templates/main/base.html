@@ -70,8 +70,10 @@
                                 <a class="nav-link dropdown-toggle" href="#" role="button" data-bs-toggle="dropdown" aria-expanded="false">Board Games</a>
                                 <ul class="dropdown-menu bg-navbar">
                                     <li><a class="dropdown-item bi-plus-circle" href="{%url 'add-game' %}"> Add Game</a></li> 
+                                    {% if user.board_games.all %}
                                     <li><hr class="dropdown-divider"></li>
                                     <li><a class="dropdown-item bi-list-ul" href="{% url 'list-game' %}"> Games List</a></li>
+                                    {% endif %}
                                 </ul>
                             </li>
                         </ul>
