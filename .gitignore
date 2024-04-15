@@ -9,3 +9,4 @@ migrations/
 staticfiles/
 .django_website/
 staticfiles/
+.env
