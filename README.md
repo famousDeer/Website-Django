@@ -40,10 +40,19 @@ To run project you need to be in `My_website/my_website`. Your dirs should looks
    └── README.md
 ```
 If you are in correct dir use this command:
-
+- This command will create staticfiles directory
+```bash
+python3 manage.py collectstatic
+```
+- Next two command will create db.sqlite3 with tables 
 ```bash
 python3 manage.py makemigrations
+```
+```bash
 python3 manage.py migrate
+```
+- This command will start local server
+```bash
 python3 manage.py runserver
 ```
 When everything is ok you should see this message:
