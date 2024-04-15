@@ -7,3 +7,4 @@ Media/
 .coverage
 migrations/
 staticfiles/
+.django_website/

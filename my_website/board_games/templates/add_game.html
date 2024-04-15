@@ -1,0 +1,123 @@
+{% extends "main/base.html" %}
+{% load static %}
+
+{% block title %}Add board game{% endblock %}
+
+{% block content %}
+<link rel="stylesheet" href="{% static 'css/board_games.css' %}">   
+
+<form method="post">
+    {% csrf_token %}
+    <div class="container mt-5">
+        <div class="row justify-content-center">
+            <div class="col-md-7">
+                <div class="shadow p-4 rounded bg-second-color">
+                    <div class="form-floating mb-4">
+                        <input type="text" class="form-control" id="floatingInput" placeholder="boardGameName" name="bg_name" required>
+                        <label for="floatingInput" class="bi-puzzle"> Board Game Name</label>                        
+                    </div>
+                    <div class="form-floating">
+                        <input type="text" class="form-control" list="categorys" id="floatingInput" placeholder="Type to search" name="bg_category" required>
+                        <label for="floatingInput" class="bi-tags"> Category</label>
+                        <datalist id="categorys">
+                            <option value="Budowa połączeń">Budowa połączeń</option>
+                            <option value="Budowanie obszarów">Budowanie obszarów</option>
+                            <option value="Budowanie talii">Budowanie talii</option>
+                            <option value="Budowanie wzorów">Budowanie wzorów</option>
+                            <option value="Dedukcja">Dedukcja</option>
+                            <option value="Draft elementów">Draft elementów</option>
+                            <option value="Eksploracja">Eksploracja</option>
+                            <option value="Figurki">Figurki</option>
+                            <option value="Gra cywilizacyjna">Gra cywilizacyjna</option>
+                            <option value="Gra dla dzieci">Gra dla dzieci</option>
+                            <option value="Gra edukacyjna">Gra edukacyjna</option>
+                            <option value="Gra ekonomiczna">Gra ekonomiczna</option>
+                            <option value="Gra imprezowa">Gra imprezowa</option>
+                            <option value="Gra karciana">Gra karciana</option>
+                            <option value="Gra kooperacyjna">Gra kooperacyjna</option>
+                            <option value="Gra kryminalna">Gra kryminalna</option>
+                            <option value="Gra legacy">Gra legacy</option>
+                            <option value="Gra logiczna">Gra logiczna</option>
+                            <option value="Gra przygodowa">Gra przygodowa</option>
+                            <option value="Gra słowna">Gra słowna</option>
+                            <option value="Gra wojenna">Gra wojenna</option>
+                            <option value="Gra zręcznościowa">Gra zręcznościowa</option>
+                            <option value="Kampania/Scenariusze">Kampania/Scenariusze</option>
+                            <option value="Kontrola obszarów">Kontrola obszarów</option>
+                            <option value="Kości">Kości</option>
+                            <option value="Negocjacje">Negocjacje</option>
+                            <option value="Print and Play">Print and Play</option>
+                            <option value="Quiz">Quiz</option>
+                            <option value="Tryb solo">Tryb solo</option>
+                            <option value="Układanie elementów">Układanie elementów</option>
+                            <option value="Walka">Walka</option>
+                            <option value="Wyścig">Wyścig</option>
+                            <option value="Zagadki">Zagadki</option>
+                            <option value="Zajmowanie pól akcji">Zajmowanie pól akcji</option>
+                            <option value="Zarządzanie ręką kart">Zarządzanie ręką kart</option>
+                            <option value="Zbieranie zestawów">Zbieranie zestawów</option>
+                        </datalist>
+                    </div>
+                    <button class="save" type="submit" name="add" value="add">Add</button>
+                </div>
+            </div>
+        </div>
+    </div>
+</form>
+<script>
+input.onfocus = function () {
+  browsers.style.display = 'block';
+  input.style.borderRadius = "5px 5px 0 0";  
+};
+for (let option of browsers.options) {
+  option.onclick = function () {
+    input.value = option.value;
+    browsers.style.display = 'none';
+    input.style.borderRadius = "5px";
+  }
+};
+
+input.oninput = function() {
+  currentFocus = -1;
+  var text = input.value.toUpperCase();
+  for (let option of browsers.options) {
+    if(option.value.toUpperCase().indexOf(text) > -1){
+      option.style.display = "block";
+  }else{
+    option.style.display = "none";
+    }
+  };
+}
+var currentFocus = -1;
+input.onkeydown = function(e) {
+  if(e.keyCode == 40){
+    currentFocus++
+   addActive(browsers.options);
+  }
+  else if(e.keyCode == 38){
+    currentFocus--
+   addActive(browsers.options);
+  }
+  else if(e.keyCode == 13){
+    e.preventDefault();
+        if (currentFocus > -1) {
+          /*and simulate a click on the "active" item:*/
+          if (browsers.options) browsers.options[currentFocus].click();
+        }
+  }
+}
+
+function addActive(x) {
+    if (!x) return false;
+    removeActive(x);
+    if (currentFocus >= x.length) currentFocus = 0;
+    if (currentFocus < 0) currentFocus = (x.length - 1);
+    x[currentFocus].classList.add("active");
+  }
+  function removeActive(x) {
+    for (var i = 0; i < x.length; i++) {
+      x[i].classList.remove("active");
+    }
+  }
+</script>
+{% endblock %}
