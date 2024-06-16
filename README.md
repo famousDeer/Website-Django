@@ -4,7 +4,7 @@ It's my first website made with Django framework. It contain simple ToDoList (ma
 
 - **Travel-Manager** this app is for people who's wanna manage travel by them. App contain map where you can add address, with information about price. You can also add descriptions. As you know many videos on TikTok shows some pro tips, so you can add TikTok link to your manager and watch them whenever you want. When you have address of your points you can make a planner. In planner you can drag your place and drop in table with date when you will go.
 
-# Demo
+# Demo (Shutdown)
 Address: 18.168.226.200:8000 \
 Login: test \
 Password: r^@11@2@W4KJyy2h
