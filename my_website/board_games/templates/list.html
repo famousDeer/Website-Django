@@ -11,9 +11,10 @@
         <table class="w-100 text-center table-bordered bg-navbar" id="myTable2">
             <thead>
                 <tr>
-                    <th class="bi-caret-down-fill" scope="col" onclick="sortTable(0)"> Name</th>
-                    <th class="bi-caret-down-fill" scope="col" onclick="sortTable(1)"> Category</th>
-                    <th class="bi-caret-down-fill" scope="col" onclick="sortTable(2)"> Played</th>
+                    <th class="bi-caret-down-fill" scope="col" onclick="sortTable(this.cellIndex)"> Name</th>
+                    <th class="bi-caret-down-fill" scope="col" onclick="sortTable(this.cellIndex)"> Category</th>
+                    <th class="bi-caret-down-fill" scope="col" onclick="sortTable(this.cellIndex)"> Played</th>
+                    <th scope="col">Buttons</th>
                 </tr>
             </thead>
             <tbody class="table-group-divider">
@@ -22,6 +23,7 @@
                     <td>{{board_game.name}}</td>
                     <td>{{board_game.category}}</td>
                     <td>{{board_game.played_counter}}</td>
+                    <td><i class="bi-plus-circle"></i> <i class="bi-trash3" style="color: red;"></i></td>
                 </tr>
                 {% endfor %}
             </tbody>
